@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#7154ed">
+  <meta name="description" content="UI工作室：3D Icon 生成、图片生成、图层拆解、UI 设计与素材整理，一起完成你的设计工作。">
+  <title>UI工作室</title>
+  <link rel="icon" href="/splitter/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./studio.css">
+  <link rel="stylesheet" href="./studio-home.css">
+  <link rel="stylesheet" href="./ui-studio.css">
+  <link rel="stylesheet" href="./workspace-scroll.css">
+</head>
+<body>
+  <div class="studio-shell">
+    <aside id="sidebar" class="studio-sidebar sidebar" aria-label="工作室导航">
+      <a class="studio-brand" href="./index.html" aria-label="UI工作室首页">
+        <span class="studio-brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M16 4 28 10 16 16 4 10Z" fill="white"/><path d="m4 16 12 6 12-6M4 22l12 6 12-6" stroke="white" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="studio-brand-name">UI工作室<small>UI DESIGN STUDIO</small></span>
+      </a>
+      <div class="studio-project"><span class="studio-project-avatar">M</span><div><strong>MEGWIN</strong><span>设计空间</span></div><span class="studio-project-dot" aria-label="本地工作空间"></span></div>
+      <nav class="sidebar-nav" aria-label="创作工具">
+        <div class="sidebar-section-label">创作工作台</div>
+        <button type="button" class="nav-item active" data-view="start" aria-current="page"><span data-icon="home" aria-hidden="true"></span><span>工作室首页</span></button>
+        <button type="button" class="nav-item" data-view="icons"><span data-icon="components" aria-hidden="true"></span><span>Icon 生成工作台</span><small class="nav-badge">3D</small></button>
+        <button type="button" class="nav-item" data-view="image"><span data-icon="image" aria-hidden="true"></span><span>AI 图像生成</span><small class="nav-badge nav-badge-soft">AI</small></button>
+        <button type="button" class="nav-item" data-view="splitter"><span data-icon="layers" aria-hidden="true"></span><span>图片图层拆解</span></button>
+        <button type="button" class="nav-item" data-view="ui"><span data-icon="layout" aria-hidden="true"></span><span>UI 页面生成</span></button>
+        <button type="button" class="nav-item" data-view="system"><span data-icon="palette" aria-hidden="true"></span><span>组件与变量</span></button>
+        <div class="sidebar-section-label sidebar-label-spaced">灵感与素材</div>
+        <button type="button" class="nav-item" data-view="references"><span data-icon="compass" aria-hidden="true"></span><span>灵感素材库</span></button>
+        <button type="button" class="nav-item" data-view="assets"><span data-icon="folder" aria-hidden="true"></span><span>我的作品</span><span id="asset-count" class="nav-count">0</span></button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="sidebar-local-note"><span class="local-status-dot"></span><div><strong>你的浏览器，你的素材</strong><p>本地素材保存在当前浏览器。<br>重要作品记得下载留存。</p></div></div>
+        <button id="about-button" type="button" class="sidebar-about"><span data-icon="help" aria-hidden="true"></span><span>关于UI工作室</span><small>v6.0</small></button>
+      </div>
+    </aside>
+    <div class="studio-main">
+      <header class="studio-topbar">
+        <div class="topbar-start"><button id="menu-toggle" type="button" class="menu-toggle" aria-label="展开或收起工作台导航" aria-controls="sidebar" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><div class="studio-breadcrumb"><span>设计工作台</span><span class="breadcrumb-separator">/</span><strong id="view-name">工作室首页</strong></div></div>
+        <div class="topbar-end"><span class="project-badge"><i></i>MEGWIN</span><span class="topbar-divider"></span><button type="button" class="topbar-reference" data-go="references"><span data-icon="spark" aria-hidden="true"></span><span>灵感素材</span></button></div>
+      </header>
+      <main id="workspace-area" class="workspace-area">
+        <section id="view-start" class="studio-view" aria-label="工作室首页"></section>
+        <section id="view-icons" class="studio-view" aria-label="Icon 生成工作台" hidden></section>
+        <section id="view-image" class="studio-view" aria-label="AI 图像生成" hidden></section>
+        <section id="view-splitter" class="studio-view" aria-label="图片图层拆解" hidden><div class="splitter-toolbar"><div><span class="splitter-title">图片图层拆解</span><span class="muted">提取、检查与导出独立图层</span></div><button class="btn primary" id="splitter-export-project" type="button">导出分层文件</button><a class="btn subtle" href="/splitter/index.html" target="_blank" rel="noopener">独立窗口打开 <span aria-hidden="true">↗</span></a></div><iframe id="splitter-frame" src="about:blank" title="图片图层拆解" class="splitter-frame" allow="clipboard-read; clipboard-write"></iframe></section>
+        <section id="view-ui" class="studio-view" aria-label="UI 页面生成" hidden></section>
+        <section id="view-system" class="studio-view" aria-label="设计系统" hidden></section>
+        <section id="view-references" class="studio-view" aria-label="灵感参考" hidden></section>
+        <section id="view-assets" class="studio-view" aria-label="我的作品" hidden></section>
+      </main>
+    </div>
+  </div>
+  <input id="reference-upload" type="file" accept="image/png,image/jpeg,image/webp" multiple hidden>
+  <div id="toast" class="studio-toast" role="status" aria-live="polite" hidden></div>
+  <div id="download-notice" class="download-notice" role="status" aria-live="polite" hidden></div>
+  <dialog id="studio-dialog" class="studio-dialog"><form method="dialog" class="dialog-close-form"><button class="dialog-close" value="cancel" aria-label="关闭对话框"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></form><div id="dialog-content"></div></dialog>
+  <script src="./studio.js" type="module"></script>
+</body>
+</html>

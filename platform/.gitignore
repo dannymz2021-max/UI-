@@ -1,0 +1,10 @@
+node_modules/
+.env
+.env.*
+!.env.example
+*.tar.gz
+*.zip
+original.html
+.sites-runtime/
+.sites-checkout/
+screenshots/

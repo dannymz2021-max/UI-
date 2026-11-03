@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#7055ed">
+  <meta name="description" content="UI工作室图层拆解：上传图片，按区域拆分图层，手动提取素材，导出透明 PNG 和分层 PSD。图片在浏览器本地处理。">
+  <title>图片图层拆解 · UI工作室</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <a class="brand" href="./" aria-label="UI工作室图层拆解首页"><span class="brand-symbol" aria-hidden="true"><i></i><i></i><i></i></span><strong>UI<span>工作室</span></strong><span class="brand-divider"></span><span class="brand-caption">图层拆解工作台</span></a>
+    <div class="header-actions"><span class="privacy-pill"><span data-icon="shield"></span><span>图片仅在本机处理</span></span><button class="text-button" id="helpBtn" aria-label="使用指南"><span data-icon="help"></span><span>使用指南</span></button><button class="button primary export-top" id="exportBtn" disabled><span data-icon="download"></span><span>导出图层</span><span data-icon="chevron-down"></span></button></div>
+  </header>
+
+  <main class="studio">
+    <aside class="source-panel panel">
+      <div class="source-scroll">
+      <div class="panel-heading"><div class="eyebrow">YOUR CREATIVE TOOLKIT</div><h1>一张图片，<br>拆出更多可能<span class="accent-dot">。</span></h1><p>让每个元素，回到独立的图层。</p></div>
+      <section class="source-section">
+        <div class="section-label"><span>素材</span><span class="step-marker">01</span></div>
+        <button class="upload-zone" id="uploadZone"><span class="upload-mark" data-icon="upload"></span><strong>点击或拖入图片</strong><span>也可以直接粘贴 <kbd>⌘ / Ctrl V</kbd></span><small>PNG · JPG · WebP · AVIF · BMP / ≤ 40 MB</small></button>
+        <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp,image/avif,image/bmp" hidden>
+        <div class="file-card" id="fileCard" hidden><img id="sourceThumb" alt="当前图片缩略图"><div><strong id="fileName"></strong><span id="fileInfo"></span></div><button class="icon-button" id="replaceBtn" title="替换图片" aria-label="替换图片"><span data-icon="replace"></span></button></div>
+      </section>
+      <section class="settings-section">
+        <div class="section-label"><span>拆分方式</span><span class="step-marker">02</span></div>
+        <div class="mode-options" role="radiogroup" aria-label="拆分方式">
+          <button class="mode-card active" role="radio" aria-checked="true" data-mode="balanced"><span class="mode-icon" data-icon="layers"></span><span><strong>均衡拆分 <em>推荐</em></strong><small>分离背景，聚合相邻元素</small></span><i class="radio-dot"></i></button>
+          <button class="mode-card" role="radio" aria-checked="false" data-mode="subject"><span class="mode-icon" data-icon="focus"></span><span><strong>主体与背景</strong><small>优先保留完整的前景区域</small></span><i class="radio-dot"></i></button>
+          <button class="mode-card" role="radio" aria-checked="false" data-mode="detail"><span class="mode-icon" data-icon="grid"></span><span><strong>细节拆分</strong><small>尝试拆出更多独立小区域</small></span><i class="radio-dot"></i></button>
+        </div>
+        <div class="setting-row"><label for="layerLimit">图层上限</label><output id="layerLimitValue">6 层</output></div><input class="range" id="layerLimit" type="range" min="3" max="12" value="6"><div class="range-labels"><span>更简洁</span><span>更细致</span></div>
+        <details class="advanced"><summary>更多设置<span data-icon="chevron-down"></span></summary><div class="setting-row"><label for="colorTolerance">颜色容差</label><output id="toleranceValue">32</output></div><input class="range" id="colorTolerance" type="range" min="8" max="72" value="32"><p>数值越大，越容易将接近的背景颜色归为一组。</p></details>
+      </section>
+      </div>
+      <div class="source-bottom"><button class="button primary analyze-button" id="analyzeBtn" disabled><span data-icon="sparkles"></span><span id="analyzeLabel">开始自动拆分</span><span data-icon="arrow-right"></span></button><div class="processing-note"><span class="tiny-status"></span>本地图像分析 · 无需 API Key</div><p class="scope-note">适合边缘清晰的设计素材。复杂图像可配合框选、套索与魔棒继续细分。</p></div>
+    </aside>
+
+    <section class="workspace" aria-label="图片编辑工作区">
+      <div class="workspace-heading"><div><span class="workspace-eyebrow">WORKSPACE</span><h2 id="workspaceName">未命名项目 <span class="demo-badge" id="demoBadge" hidden>示例</span></h2></div><div class="history-controls"><button class="icon-button" id="undoBtn" disabled aria-label="撤销" title="撤销（Ctrl / ⌘ Z）"><span data-icon="undo"></span></button><button class="icon-button" id="redoBtn" disabled aria-label="重做" title="重做（Ctrl / ⌘ Shift Z）"><span data-icon="redo"></span></button><span class="toolbar-divider"></span><button class="icon-button" id="clearBtn" disabled aria-label="清空工作区" title="清空工作区"><span data-icon="trash"></span></button></div></div>
+      <div class="canvas-shell" id="canvasShell">
+        <div class="canvas-topbar"><div class="view-tabs" role="tablist" aria-label="预览方式"><button class="active" id="viewComposite" role="tab" aria-selected="true" data-view="composite">合成图</button><button role="tab" aria-selected="false" data-view="single">单层</button><button role="tab" aria-selected="false" data-view="layers">图层总览</button><button role="tab" aria-selected="false" data-view="original">原图</button></div><span class="canvas-size" id="canvasSize">准备就绪</span></div>
+        <div class="canvas-area" id="canvasArea">
+          <div class="empty-state" id="emptyState"><div class="empty-illustration"><i></i><i></i><i></i><span data-icon="image"></span></div><h3>设计的下一步，从拆层开始</h3><p>上传一张图片，或从下方示例开始体验</p><button class="button primary" id="emptyUpload">上传图片<span data-icon="arrow-right"></span></button></div>
+          <div class="canvas-stage" id="canvasStage" hidden><div class="image-frame" id="imageFrame"><canvas id="mainCanvas" aria-label="图片预览"></canvas><canvas id="selectionCanvas" aria-label="框选、套索和魔棒操作区域" tabindex="0"></canvas></div></div>
+          <div class="layer-overview" id="layerOverview" hidden></div>
+          <div class="tool-rail" id="toolRail" hidden><button class="tool-button active" data-tool="select" aria-label="选择图层 V" title="选择图层 · V"><span data-icon="cursor"></span></button><span></span><button class="tool-button" data-tool="rect" aria-label="矩形框选 M" title="矩形框选 · M"><span data-icon="select"></span></button><button class="tool-button" data-tool="lasso" aria-label="自由套索 L" title="自由套索 · L"><span data-icon="lasso"></span></button><button class="tool-button" data-tool="wand" aria-label="魔棒选色 W" title="魔棒选色 · W"><span data-icon="wand"></span></button></div>
+          <div class="selection-actions" id="selectionActions" hidden><span id="selectionCount"></span><button id="invertSelection">反选</button><button id="clearSelection">取消</button><button class="button primary" id="extractSelection"><span data-icon="plus"></span>提取为图层</button></div>
+          <div class="busy-overlay" id="busyOverlay" hidden><div class="busy-card"><div class="processing-orbit"><span data-icon="layers"></span></div><h3 id="busyTitle">正在拆解图像</h3><p id="busyMessage">分析颜色与区域边缘…</p><div class="progress-track"><i id="progressFill"></i></div><span id="progressText">0%</span></div></div>
+        </div>
+        <div class="canvas-bottombar"><span class="tool-hint" id="toolHint"><i class="tiny-status"></i>选择图层后，可继续手动细分</span><div class="zoom-controls"><button class="icon-button" id="zoomOut" aria-label="缩小"><span data-icon="minus"></span></button><button id="zoomFit" title="适合画布">适应画布</button><button class="icon-button" id="zoomIn" aria-label="放大"><span data-icon="plus"></span></button></div></div>
+      </div>
+      <div class="workspace-notice" id="analysisNotice" hidden><span data-icon="info"></span><p id="analysisMessage"></p><button class="icon-button" id="dismissNotice" aria-label="关闭提示"><span data-icon="x"></span></button></div>
+      <section class="samples-section"><div class="samples-title"><strong>先试试看</strong><span>选一张素材，看看图层里的可能</span></div><div class="demo-grid" id="demoGrid"><button class="demo-card selected" data-demo="sports"><div class="demo-preview sports-preview"><span class="mini-word">GAME<br>ON.</span><span class="mini-ball">◉</span></div><span><strong>体育 Banner</strong><small>图形 · 文案 · 背景</small></span><span data-icon="arrow-up-right"></span></button><button class="demo-card" data-demo="ui"><div class="demo-preview ui-preview"><i></i><i></i><i></i></div><span><strong>UI 页面</strong><small>卡片 · 组件 · 版面</small></span><span data-icon="arrow-up-right"></span></button><button class="demo-card" data-demo="poster"><div class="demo-preview poster-preview"><b>FORM</b><i></i></div><span><strong>创意海报</strong><small>色块 · 字形 · 装饰</small></span><span data-icon="arrow-up-right"></span></button></div></section>
+      <footer class="workspace-footer"><span>MAKE ROOM FOR EVERY LAYER.</span><span>UI工作室 / 01</span></footer>
+    </section>
+
+    <aside class="layers-panel panel">
+      <div class="layers-heading"><h2>图层<span id="layerCount">0</span></h2><button class="icon-button" id="showAllBtn" aria-label="显示全部图层" title="显示全部图层"><span data-icon="eye"></span></button></div>
+      <div class="layers-hint"><span data-icon="layers"></span><span>从上到下，保持叠放顺序</span></div>
+      <div class="layers-list" id="layersList"><div class="no-layers"><span data-icon="layers"></span><h3>每一层，都值得单独看见</h3><p>拆分完成后，图层会出现在这里。<br>独立查看、调整和导出。</p></div></div>
+      <div class="layer-properties" id="layerProperties" hidden><div class="section-label"><span>当前图层</span><span class="subtle-label" id="layerType">像素图层</span></div><label class="sr-only" for="layerNameInput">图层名称</label><input class="text-input" id="layerNameInput" maxlength="80" placeholder="图层名称"><div class="setting-row"><label for="opacityRange">不透明度</label><output id="opacityValue">100%</output></div><input class="range" type="range" id="opacityRange" min="0" max="100" value="100"><div class="layer-property-info"><span>内容边界</span><span id="layerBounds">—</span></div><div class="layer-actions"><button class="icon-button" id="moveLayerUp" aria-label="图层上移" title="图层上移"><span data-icon="arrow-up"></span></button><button class="icon-button" id="moveLayerDown" aria-label="图层下移" title="图层下移"><span data-icon="arrow-down"></span></button><button class="icon-button" id="deleteLayer" aria-label="删除当前图层" title="删除当前图层"><span data-icon="trash"></span></button><button class="button secondary png-button" id="downloadLayer"><span data-icon="download"></span>PNG</button></div></div>
+      <div class="tip-card"><span class="tip-icon" data-icon="lightbulb"></span><strong>给设计留一点自由</strong><p>点选图层后，用左侧工具继续拆出你需要的元素。</p><button id="tipsHelp">了解拆层边界<span data-icon="arrow-up-right"></span></button></div>
+    </aside>
+  </main>
+
+  <dialog id="exportDialog" class="modal export-modal"><form method="dialog" class="modal-close"><button class="icon-button" aria-label="关闭"><span data-icon="x"></span></button></form><div class="modal-eyebrow">READY FOR YOUR NEXT IDEA</div><h2>让图层，进入下一步创作。</h2><p class="modal-subtitle" id="exportSummary">选择适合你的导出格式</p><div class="export-formats"><label class="format-card selected"><input type="radio" name="format" value="psd" checked><span class="format-symbol psd-symbol">Ps</span><div><strong>分层 PSD <em>推荐</em></strong><p>保留图层、名称、可见性与透明度</p></div><i class="radio-dot"></i></label><label class="format-card"><input type="radio" name="format" value="zip"><span class="format-symbol zip-symbol">ZIP</span><div><strong>透明 PNG 图层包</strong><p>每层一张 PNG，附位置和图层清单</p></div><i class="radio-dot"></i></label><label class="format-card"><input type="radio" name="format" value="ora"><span class="format-symbol ora-symbol">ORA</span><div><strong>OpenRaster 工程</strong><p>用于支持 ORA 的图像编辑工具</p></div><i class="radio-dot"></i></label></div><div class="export-note"><span data-icon="info"></span><p>导出的是<strong>像素图层</strong>。图片里的文字不会转换为可编辑文本；被遮挡的内容不会自动补全。所有图层保留工作尺寸与对齐位置。</p></div><button class="button primary wide" id="confirmExport"><span data-icon="download"></span><span id="confirmExportLabel">下载分层 PSD</span></button><p class="export-progress" id="exportProgress" aria-live="polite"></p><a class="button secondary wide save-export" id="saveExport" hidden download>保存生成的文件 <span data-icon="download"></span></a></dialog>
+
+  <dialog id="helpDialog" class="modal help-modal"><form method="dialog" class="modal-close"><button class="icon-button" aria-label="关闭"><span data-icon="x"></span></button></form><div class="modal-eyebrow">A LITTLE GUIDE</div><h2>从一张图，到你的素材库。</h2><div class="help-steps"><section><b>01</b><div><h3>放入你的素材</h3><p>上传、拖入或粘贴 PNG、JPG、WebP、AVIF、BMP。原始文件上限 40 MB。为保持流畅，工作图像最长边不超过 2400 像素、总像素约不超过 280 万；超过时会明确提示缩放。</p></div></section><section><b>02</b><div><h3>自动拆分，再做一点微调</h3><p>根据边缘、颜色和连通区域拆分。右侧选中图层后，使用框选 M、套索 L 或魔棒 W 提取其中的元素；按住 Shift 可以追加选区，Esc 清空选区。魔棒使用左侧的颜色容差。</p></div></section><section><b>03</b><div><h3>带着独立图层，继续创作</h3><p>点击眼睛控制显示；可重命名、调透明度、调整顺序。单层导出透明 PNG；整套导出分层 PSD、PNG ZIP 或 ORA。PNG 保持完整画布，放回设计软件即可对齐。</p></div></section></div><div class="help-boundary"><h3>关于「还原图层」</h3><p>扁平图片并不包含原始工程信息。这里按可见像素重新拆层，无法找回原始 PSD / Figma 图层、原字体、可编辑文字或物体背后被遮住的内容。复杂照片、发丝、光晕和重叠元素通常需要手动精修。复杂背景可能按色区分组，结果会标明。</p></div><div class="help-local"><span data-icon="shield"></span><p>图片只在当前浏览器里处理，不上传到图像服务。刷新页面会清空当前工作；请在离开前导出。</p></div><button class="button primary wide" id="closeHelp">开始创作<span data-icon="arrow-right"></span></button></dialog>
+
+  <div class="toast-container" id="toastContainer" aria-live="polite" role="status"></div>
+  <div class="drop-overlay" id="dropOverlay" hidden><div><span data-icon="upload"></span><h2>放下图片，开始拆层</h2><p>PNG · JPG · WebP · AVIF · BMP</p></div></div>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

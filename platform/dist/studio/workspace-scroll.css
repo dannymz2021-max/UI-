@@ -1,0 +1,253 @@
+/* Desktop workspaces own their scroll regions. A wheel over the controls
+   never moves the preview, the shell, or a neighbouring panel. */
+.studio-brand-name { letter-spacing: -.35px; }
+
+@media (min-width: 901px) {
+  html, body {
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .studio-shell {
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .studio-sidebar {
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .studio-sidebar > .studio-brand,
+  .studio-sidebar > .studio-project,
+  .studio-sidebar > .sidebar-bottom {
+    flex-shrink: 0;
+  }
+
+  .studio-sidebar > .sidebar-nav {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: #d9cee9 transparent;
+  }
+
+  .sidebar-nav > * { flex-shrink: 0; }
+  .sidebar-bottom { padding-top: 18px; }
+
+  .studio-main {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .studio-topbar {
+    position: relative;
+    flex: 0 0 65px;
+    min-height: 65px;
+  }
+
+  .workspace-area {
+    flex: 1 1 auto;
+    height: 0;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .workspace-area > .studio-view {
+    height: 100%;
+    min-height: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+
+  /* Typography: parameter list and output column are independent. */
+  #view-art { overflow: hidden; }
+
+  #view-art .art-root {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  #view-art .art-heading { flex: 0 0 auto; margin-bottom: 22px; }
+
+  #view-art .art-workspace {
+    flex: 1 1 auto;
+    min-height: 0;
+    align-items: stretch;
+    overflow: hidden;
+  }
+
+  #view-art .art-controls,
+  #view-art .art-preview-column {
+    position: relative;
+    top: auto;
+    height: 100%;
+    min-height: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: #d9cee9 transparent;
+  }
+
+  #view-art .art-preview-column > * { flex-shrink: 0; }
+  #view-art .art-stage { min-height: clamp(250px, 40dvh, 480px); }
+
+  /* Page builder: keep canvas controls and export actions in their panel. */
+  #view-ui.ui-root,
+  #view-image {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  #view-ui .ui-heading,
+  #view-image > .page-heading { flex: 0 0 auto; }
+
+  #view-ui .ui-workspace,
+  #view-image .image-layout {
+    flex: 1 1 auto;
+    min-height: 0;
+    align-items: stretch;
+    overflow: hidden;
+  }
+
+  #view-ui .ui-editor {
+    height: 100%;
+    min-height: 0;
+    max-height: none;
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+
+  #view-ui .ui-preview-panel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: #d9cee9 transparent;
+  }
+
+  #view-ui .ui-preview-panel > * { flex-shrink: 0; }
+
+  #view-ui .ui-preview-panel > .ui-preview-area {
+    flex: 1 1 auto;
+    min-height: 160px;
+    max-height: none;
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+
+  #view-image .image-controls,
+  #view-image .image-preview-panel {
+    position: relative;
+    top: auto;
+    height: 100%;
+    min-height: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: #d9cee9 transparent;
+  }
+
+  #view-image .image-controls > * { flex-shrink: 0; }
+  #view-image .image-preview { min-height: clamp(230px, 39dvh, 480px); }
+
+  /* Variables: editing one card leaves the other cards in place. */
+  #view-system.ds-root {
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+  }
+
+  #view-system .ds-heading,
+  #view-system .ds-source-links { flex: 0 0 auto; }
+
+  #view-system .ds-grid {
+    flex: 1 1 0;
+    min-height: 160px;
+    align-items: stretch;
+  }
+
+  #view-system .ds-grid.ds-bottom { flex: .8 1 0; }
+
+  #view-system .ds-grid > .ds-card {
+    min-height: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: #d9cee9 transparent;
+  }
+
+  #view-system .ds-token-list { overscroll-behavior: contain; }
+
+  /* References, saved works, and raster editor stay inside the shell. */
+  #view-references,
+  #view-assets,
+  #view-splitter {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  #view-references > .page-heading,
+  #view-assets > .page-heading,
+  #view-assets > .assets-toolbar,
+  #view-splitter > .splitter-toolbar { flex: 0 0 auto; }
+
+  #view-references .reference-layout {
+    flex: 1 1 auto;
+    min-height: 0;
+    grid-template-columns: minmax(0, 1fr) 245px;
+    align-items: stretch;
+  }
+
+  #view-references .reference-layout > div,
+  #view-references .reference-sidebar {
+    position: relative;
+    top: auto;
+    height: 100%;
+    min-height: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: #d9cee9 transparent;
+  }
+
+  #view-references .reference-sidebar > * { flex-shrink: 0; }
+  #view-references .reference-intro { flex-wrap: wrap; }
+
+  #assets-content {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: #d9cee9 transparent;
+  }
+
+  #view-splitter .splitter-frame {
+    flex: 1 1 auto;
+    height: 0;
+    min-height: 0;
+  }
+}
+
+/* Narrow screens retain the natural single-column reading/scrolling flow. */
+@media (max-width: 900px) {
+  .studio-brand-name { font-size: 19px; }
+  .studio-sidebar { overscroll-behavior: contain; }
+  #view-ui .ui-preview-area { overscroll-behavior: contain; }
+}

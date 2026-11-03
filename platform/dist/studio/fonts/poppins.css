@@ -1,0 +1,16 @@
+/* Unmodified Google Fonts Poppins. See Poppins-OFL.txt and FONT-SOURCES.txt. */
+@font-face {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./Poppins-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("./Poppins-SemiBold.ttf") format("truetype");
+}

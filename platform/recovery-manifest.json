@@ -1,0 +1,1369 @@
+{
+  "origin": "https://layerlab-studio-dany.xpbet-3575.chatgpt.site",
+  "recoveredAt": "2026-11-03T05:42:35.964Z",
+  "files": [
+    {
+      "path": "/studio/index.html",
+      "status": 200,
+      "size": 6643
+    },
+    {
+      "path": "/splitter/favicon.svg",
+      "status": 200,
+      "size": 287
+    },
+    {
+      "path": "/studio/studio.css",
+      "status": 200,
+      "size": 32268
+    },
+    {
+      "path": "/studio/workspace-scroll.css",
+      "status": 200,
+      "size": 5699
+    },
+    {
+      "path": "/studio/studio-home.css",
+      "status": 200,
+      "size": 6299
+    },
+    {
+      "path": "/studio/ui-studio.css",
+      "status": 200,
+      "size": 27220
+    },
+    {
+      "path": "/splitter/index.html",
+      "status": 200,
+      "size": 16112
+    },
+    {
+      "path": "/splitter/styles.css",
+      "status": 200,
+      "size": 35108
+    },
+    {
+      "path": "/studio/studio.js",
+      "status": 200,
+      "size": 40161
+    },
+    {
+      "path": "/splitter/app.js",
+      "status": 200,
+      "size": 36806
+    },
+    {
+      "path": "/studio/ui-studio.js",
+      "status": 200,
+      "size": 51719
+    },
+    {
+      "path": "/studio/icon-studio.js",
+      "status": 200,
+      "size": 38722
+    },
+    {
+      "path": "/studio/icon-library-data.js",
+      "status": 200,
+      "size": 2872
+    },
+    {
+      "path": "/studio/design-system.js",
+      "status": 200,
+      "size": 31712
+    },
+    {
+      "path": "/studio/icon-renderer.js",
+      "status": 200,
+      "size": 6132
+    },
+    {
+      "path": "/studio/icon-library.html",
+      "status": 200,
+      "size": 2696
+    },
+    {
+      "path": "/studio/studio-home.js",
+      "status": 200,
+      "size": 6812
+    },
+    {
+      "path": "/splitter/engine.js",
+      "status": 200,
+      "size": 25174
+    },
+    {
+      "path": "/studio/UI%E5%B7%A5%E4%BD%9C%E5%AE%A4-generation-brief.json",
+      "status": 404
+    },
+    {
+      "path": "/studio/%E5%88%9B%E6%84%8F%E4%BD%9C%E5%93%81.png",
+      "status": 404
+    },
+    {
+      "path": "/studio/UI%E5%B7%A5%E4%BD%9C%E5%AE%A4.png",
+      "status": 404
+    },
+    {
+      "path": "/studio/icon-samples/contact-sheet.png",
+      "status": 200,
+      "size": 804909
+    },
+    {
+      "path": "/studio/ui-renderer.js",
+      "status": 200,
+      "size": 38614
+    },
+    {
+      "path": "/splitter/pasted-image.png",
+      "status": 404
+    },
+    {
+      "path": "/splitter/%E8%AE%BE%E8%AE%A1%E5%B7%A5%E4%BD%9C%E5%8F%B0%E4%BD%9C%E5%93%81.png",
+      "status": 404
+    },
+    {
+      "path": "/splitter/uploaded-image.png",
+      "status": 404
+    },
+    {
+      "path": "/splitter/demo.js",
+      "status": 200,
+      "size": 15002
+    },
+    {
+      "path": "/splitter/export.js",
+      "status": 200,
+      "size": 19683
+    },
+    {
+      "path": "/studio/art-history.js",
+      "status": 200,
+      "size": 2275
+    },
+    {
+      "path": "/studio/figma-main-page.js",
+      "status": 200,
+      "size": 4868
+    },
+    {
+      "path": "/studio/welcome-reward.png",
+      "status": 404
+    },
+    {
+      "path": "/studio/step-free-spins.png",
+      "status": 404
+    },
+    {
+      "path": "/studio/figma-page.js",
+      "status": 200,
+      "size": 4770
+    },
+    {
+      "path": "/studio/sources.json",
+      "status": 404
+    },
+    {
+      "path": "/studio/application/json,.json",
+      "status": 404
+    },
+    {
+      "path": "/studio/megwin-design-tokens.json",
+      "status": 404
+    },
+    {
+      "path": "/studio/figma-catalog.js",
+      "status": 200,
+      "size": 23882
+    },
+    {
+      "path": "/studio/megwin-semantic-tokens.css",
+      "status": 404
+    },
+    {
+      "path": "/studio/icon-studio.css",
+      "status": 200,
+      "size": 25266
+    },
+    {
+      "path": "/studio/icon-3d-engine.js",
+      "status": 200,
+      "size": 27073
+    },
+    {
+      "path": "/studio/fonts/poppins.css",
+      "status": 200,
+      "size": 405
+    },
+    {
+      "path": "/splitter/Matchday-%E4%BD%93%E8%82%B2%E6%B4%BB%E5%8A%A8%E7%A4%BA%E4%BE%8B.png",
+      "status": 404
+    },
+    {
+      "path": "/studio/fonts/Poppins-SemiBold.ttf",
+      "status": 200,
+      "size": 157312
+    },
+    {
+      "path": "/studio/icon-library.js",
+      "status": 200,
+      "size": 2783
+    },
+    {
+      "path": "/studio/icon-library.css",
+      "status": 200,
+      "size": 5810
+    },
+    {
+      "path": "/studio/fonts/Poppins-Regular.ttf",
+      "status": 200,
+      "size": 160316
+    },
+    {
+      "path": "/splitter/mergedimage.png",
+      "status": 404
+    },
+    {
+      "path": "/splitter/Thumbnails/thumbnail.png",
+      "status": 404
+    },
+    {
+      "path": "/splitter/%E6%8E%A2%E7%B4%A2%E4%B8%8B%E4%B8%80%E7%AB%99-%E7%95%8C%E9%9D%A2%E7%A4%BA%E4%BE%8B.png",
+      "status": 404
+    },
+    {
+      "path": "/splitter/preview.png",
+      "status": 404
+    },
+    {
+      "path": "/splitter/manifest.json",
+      "status": 404
+    },
+    {
+      "path": "/splitter/Form-and-Space-%E6%B5%B7%E6%8A%A5%E7%A4%BA%E4%BE%8B.png",
+      "status": 404
+    },
+    {
+      "path": "/studio/figma-main-assets/main-manifest.json",
+      "status": 200,
+      "size": 43574
+    },
+    {
+      "path": "/studio/figma-page.css",
+      "status": 200,
+      "size": 36640
+    },
+    {
+      "path": "/studio/figma-main-page.css",
+      "status": 200,
+      "size": 42183
+    },
+    {
+      "path": "/studio/figma-main-assets/main-body.html",
+      "status": 200,
+      "size": 336710
+    },
+    {
+      "path": "/studio/figma-assets/activity-manifest.json",
+      "status": 200,
+      "size": 29208
+    },
+    {
+      "path": "/studio/figma-assets/activity-body.html",
+      "status": 200,
+      "size": 177030
+    },
+    {
+      "path": "/studio/art-text-mesh.js",
+      "status": 200,
+      "size": 10392
+    },
+    {
+      "path": "/studio/art-software-renderer.js",
+      "status": 200,
+      "size": 9945
+    },
+    {
+      "path": "/studio/vendor/three.module.js",
+      "status": 200,
+      "size": 658900
+    },
+    {
+      "path": "/studio/figma/megwin-audit.json",
+      "status": 200,
+      "size": 1442835
+    },
+    {
+      "path": "/studio/figma-catalog.css",
+      "status": 200,
+      "size": 10811
+    },
+    {
+      "path": "/studio/megwin-figma-read-audit.json",
+      "status": 404
+    },
+    {
+      "path": "/studio/art-composite.js",
+      "status": 200,
+      "size": 2329
+    },
+    {
+      "path": "/studio/figma-assets/036fcc8f-c39b-4bed-a8dd-595aaf90e4b2.svg",
+      "status": 200,
+      "size": 4619
+    },
+    {
+      "path": "/studio/figma-assets/01f13f8b-48f0-4c80-b031-fe63902b8bc8.png",
+      "status": 200,
+      "size": 4793
+    },
+    {
+      "path": "/studio/figma-assets/132b2f3c-8a64-4c4a-827c-9a9b8f463148.png",
+      "status": 200,
+      "size": 5709
+    },
+    {
+      "path": "/studio/figma-assets/078b6214-6c38-4a4c-a1ce-08d3f2e7cd86.png",
+      "status": 200,
+      "size": 10061
+    },
+    {
+      "path": "/studio/figma-assets/0654bd78-0d94-4d74-bebd-5c8686e3c057.svg",
+      "status": 200,
+      "size": 2655
+    },
+    {
+      "path": "/studio/figma-assets/14fdaf56-9740-423c-b99a-1093cfa7d7ac.svg",
+      "status": 200,
+      "size": 5443
+    },
+    {
+      "path": "/studio/figma-assets/197ee133-d1e5-42cf-b377-ac2ab848d9c5.svg",
+      "status": 200,
+      "size": 2455
+    },
+    {
+      "path": "/studio/figma-assets/16621c16-d9d4-4127-ab27-d311860caa92.png",
+      "status": 200,
+      "size": 9002
+    },
+    {
+      "path": "/studio/figma-assets/1afdaa28-78cb-4953-ba97-22ee06fee81a.svg",
+      "status": 200,
+      "size": 3577
+    },
+    {
+      "path": "/studio/figma-assets/28dfdcca-9d0a-4fd6-92a8-3d488b2cc188.svg",
+      "status": 200,
+      "size": 1971
+    },
+    {
+      "path": "/studio/figma-assets/25ea18d0-fb39-4fe8-944e-9c2c3390125d.svg",
+      "status": 200,
+      "size": 6658
+    },
+    {
+      "path": "/studio/figma-assets/3b0bb082-bd79-4fe1-ac12-fb4d397e4fa1.svg",
+      "status": 200,
+      "size": 3895
+    },
+    {
+      "path": "/studio/figma-assets/356b9938-22d8-4c6f-8f35-5c408c994fe7.svg",
+      "status": 200,
+      "size": 11275
+    },
+    {
+      "path": "/studio/figma-assets/3000ce31-6d1a-4827-abe9-99c2d1a471bb.svg",
+      "status": 200,
+      "size": 2272
+    },
+    {
+      "path": "/studio/figma-assets/33488e11-5f74-40fd-82ed-5b803e04ee77.svg",
+      "status": 200,
+      "size": 972
+    },
+    {
+      "path": "/studio/figma-assets/46a0a90f-cca3-4b58-9413-945d62fdd15a.svg",
+      "status": 200,
+      "size": 2438
+    },
+    {
+      "path": "/studio/figma-assets/46dedb77-3d2d-40bc-8ce6-fabfff18889a.svg",
+      "status": 200,
+      "size": 2365
+    },
+    {
+      "path": "/studio/figma-assets/49965e17-e8d5-42d0-9e86-9b5085b3666a.png",
+      "status": 200,
+      "size": 6301
+    },
+    {
+      "path": "/studio/figma-assets/4f2fea49-02a9-4c8e-8927-a69f1f1311fc.svg",
+      "status": 200,
+      "size": 4848
+    },
+    {
+      "path": "/studio/figma-assets/57dc8452-24e2-44eb-a297-621d35eb4107.png",
+      "status": 200,
+      "size": 3360
+    },
+    {
+      "path": "/studio/figma-assets/52d60ab1-aa0f-4674-a149-dac901f4e4d0.svg",
+      "status": 200,
+      "size": 2941
+    },
+    {
+      "path": "/studio/figma-assets/571144a7-2d59-4c4d-92b1-4e989fd7aaee.svg",
+      "status": 200,
+      "size": 2289
+    },
+    {
+      "path": "/studio/figma-assets/57d299bd-c693-4a01-810a-ddeb17a5b609.svg",
+      "status": 200,
+      "size": 876
+    },
+    {
+      "path": "/studio/figma-assets/6775a8f0-751c-43cb-ad9b-2d805b99c9dc.svg",
+      "status": 200,
+      "size": 2855
+    },
+    {
+      "path": "/studio/figma-assets/748c00bf-e557-4a2e-9bed-196cf5dcd0d5.svg",
+      "status": 200,
+      "size": 521
+    },
+    {
+      "path": "/studio/figma-assets/5ac06687-b28a-46cb-b634-1d407eef46e2.svg",
+      "status": 200,
+      "size": 3281
+    },
+    {
+      "path": "/studio/figma-assets/7037c021-9ea7-4c2a-8a33-cd8ef8e2af1c.png",
+      "status": 200,
+      "size": 4671
+    },
+    {
+      "path": "/studio/figma-assets/75e2c573-26fb-4d46-9a08-83754a4e1658.svg",
+      "status": 200,
+      "size": 965
+    },
+    {
+      "path": "/studio/figma-assets/6b389e6d-d061-45e9-9305-2390b33854f1.svg",
+      "status": 200,
+      "size": 4637
+    },
+    {
+      "path": "/studio/figma-assets/8495f0e4-1167-47fb-9acb-094cea587f60.svg",
+      "status": 200,
+      "size": 2169
+    },
+    {
+      "path": "/studio/figma-assets/81ccc75b-2862-470f-ab02-f8b825a0c8fc.svg",
+      "status": 200,
+      "size": 3079
+    },
+    {
+      "path": "/studio/figma-assets/7db8a818-1ff2-4f72-9017-3d1f86a2a327.svg",
+      "status": 200,
+      "size": 1257
+    },
+    {
+      "path": "/studio/figma-assets/8b92063f-a258-4668-b829-f00b80c49901.svg",
+      "status": 200,
+      "size": 8131
+    },
+    {
+      "path": "/studio/figma-assets/79107121-43f0-4c62-bd07-56a5dccf1f91.svg",
+      "status": 200,
+      "size": 319
+    },
+    {
+      "path": "/studio/figma-assets/87a10797-1b11-4f93-9a14-f38aafc601e2.svg",
+      "status": 200,
+      "size": 3067
+    },
+    {
+      "path": "/studio/figma-assets/9429ee50-b35c-4803-af1f-b00c43c7d557.svg",
+      "status": 200,
+      "size": 330
+    },
+    {
+      "path": "/studio/figma-assets/9f8c6c09-4e83-415d-b471-2811918fb0fb.svg",
+      "status": 200,
+      "size": 5531
+    },
+    {
+      "path": "/studio/figma-assets/94be020d-2b3d-4dde-b94c-b9103003d2d1.svg",
+      "status": 200,
+      "size": 3554
+    },
+    {
+      "path": "/studio/figma-assets/a5ca745e-f44b-41be-a15c-db1490773b73.png",
+      "status": 200,
+      "size": 2840
+    },
+    {
+      "path": "/studio/figma-assets/92c21234-e7ce-4cdb-8864-272a5309b383.svg",
+      "status": 200,
+      "size": 7302
+    },
+    {
+      "path": "/studio/figma-assets/93ede4e9-1f07-49f3-bd87-558e4d511dad.png",
+      "status": 200,
+      "size": 4257
+    },
+    {
+      "path": "/studio/figma-assets/b30a365f-5073-45a8-948e-b3f8bc37623e.svg",
+      "status": 200,
+      "size": 1035
+    },
+    {
+      "path": "/studio/figma-assets/c0484351-f1b5-4e03-a198-323f8ff2f0cb.svg",
+      "status": 200,
+      "size": 3551
+    },
+    {
+      "path": "/studio/figma-assets/c2e43080-59db-46c6-82a2-fdcabc03836a.svg",
+      "status": 200,
+      "size": 3271
+    },
+    {
+      "path": "/studio/figma-assets/bdd42b56-4ec5-4a9c-9e01-7c31e6ae87e6.png",
+      "status": 200,
+      "size": 4444
+    },
+    {
+      "path": "/studio/figma-assets/b97a0e79-b78d-4853-badd-8a6a8321c736.svg",
+      "status": 200,
+      "size": 885
+    },
+    {
+      "path": "/studio/figma-assets/b5b079cc-8195-4939-a2b1-e6800cc437b0.png",
+      "status": 200,
+      "size": 2648
+    },
+    {
+      "path": "/studio/figma-assets/e9dbcec4-5324-48df-8a0b-d7c58867d260.svg",
+      "status": 200,
+      "size": 3886
+    },
+    {
+      "path": "/studio/figma-assets/d9508636-56f4-472b-af91-671367a9a4e8.svg",
+      "status": 200,
+      "size": 8433
+    },
+    {
+      "path": "/studio/figma-assets/d187d2f8-5996-4d0a-a9c5-5793cf40936c.svg",
+      "status": 200,
+      "size": 4624
+    },
+    {
+      "path": "/studio/figma-assets/e92831ce-6a28-4d87-b9b1-219401e761e8.svg",
+      "status": 200,
+      "size": 12079
+    },
+    {
+      "path": "/studio/figma-assets/f6ace1dd-3db2-41ea-885a-3a1cff52dfa1.svg",
+      "status": 200,
+      "size": 2702
+    },
+    {
+      "path": "/studio/figma-assets/d01503f6-2ee8-46be-bd61-a713e726d071.svg",
+      "status": 200,
+      "size": 778
+    },
+    {
+      "path": "/studio/figma-assets/fec2476d-a9f6-4962-b3a1-8fb16e4e19b3.svg",
+      "status": 200,
+      "size": 4237
+    },
+    {
+      "path": "/studio/figma-main-assets/00682c11-bb0a-4946-9e60-df827d7b5a6b.svg",
+      "status": 200,
+      "size": 1918
+    },
+    {
+      "path": "/studio/figma-main-assets/02f9ddc4-de2d-4c70-8995-6bc09fa61bd4.svg",
+      "status": 200,
+      "size": 319
+    },
+    {
+      "path": "/studio/figma-main-assets/02141838-8764-478b-ab64-42f46204d9ab.svg",
+      "status": 200,
+      "size": 2650
+    },
+    {
+      "path": "/studio/figma-main-assets/090b64f2-9af5-4e1c-a67d-39869e01912c.svg",
+      "status": 200,
+      "size": 2450
+    },
+    {
+      "path": "/studio/figma-main-assets/10b37c88-c2fd-4a95-ac39-849466fc25a1.png",
+      "status": 200,
+      "size": 375620
+    },
+    {
+      "path": "/studio/figma-main-assets/117ee5e0-1fa7-4311-97ed-c76d6749e9f4.png",
+      "status": 200,
+      "size": 122953
+    },
+    {
+      "path": "/studio/figma-main-assets/15311721-8635-4930-81f2-584e1ecfe951.svg",
+      "status": 200,
+      "size": 227
+    },
+    {
+      "path": "/studio/figma-main-assets/1bd13c88-ae3b-4572-ab0e-ef994557cda8.png",
+      "status": 200,
+      "size": 87956
+    },
+    {
+      "path": "/studio/figma-main-assets/1e6cfc36-5c5e-406e-9607-d962b3512a4f.png",
+      "status": 200,
+      "size": 1220002
+    },
+    {
+      "path": "/studio/figma-main-assets/1941f429-1655-4abe-a969-26455fa36d18.png",
+      "status": 200,
+      "size": 1710371
+    },
+    {
+      "path": "/studio/figma-main-assets/1114ad4d-a702-4185-9ea9-b68d66960468.png",
+      "status": 200,
+      "size": 1040521
+    },
+    {
+      "path": "/studio/figma-main-assets/2312a657-fd9f-4549-b827-a11213f30dab.svg",
+      "status": 200,
+      "size": 3062
+    },
+    {
+      "path": "/studio/figma-main-assets/27af8385-17ea-43c7-928b-8f193d2713a6.svg",
+      "status": 200,
+      "size": 330
+    },
+    {
+      "path": "/studio/figma-main-assets/255010f7-2edd-495d-8df7-ac2d2bfd3c90.svg",
+      "status": 200,
+      "size": 330
+    },
+    {
+      "path": "/studio/figma-main-assets/2ab53ea9-bffc-4ca0-9b4c-a96492d4c9be.png",
+      "status": 200,
+      "size": 106739
+    },
+    {
+      "path": "/studio/figma-main-assets/23e3a575-d00d-4171-95e5-f83531f1be1d.png",
+      "status": 200,
+      "size": 423629
+    },
+    {
+      "path": "/studio/figma-main-assets/243e93fb-f52c-4920-a1eb-ac7ab3d0a775.svg",
+      "status": 200,
+      "size": 4606
+    },
+    {
+      "path": "/studio/figma-main-assets/313a7856-261e-430d-ad77-8cb8ee05a56b.svg",
+      "status": 200,
+      "size": 398
+    },
+    {
+      "path": "/studio/figma-main-assets/345a7e38-71e8-41b4-bdfb-6cb421ea4202.svg",
+      "status": 200,
+      "size": 8397
+    },
+    {
+      "path": "/studio/figma-main-assets/370765ae-82a2-4dd2-abd0-50de0f97549e.png",
+      "status": 200,
+      "size": 19130
+    },
+    {
+      "path": "/studio/figma-main-assets/3049319c-de0b-4040-9573-630c05f903b8.png",
+      "status": 200,
+      "size": 7620
+    },
+    {
+      "path": "/studio/figma-main-assets/347769f5-49ef-4fb7-b959-b9d0706cd8c3.svg",
+      "status": 200,
+      "size": 332
+    },
+    {
+      "path": "/studio/figma-main-assets/391b95ca-65e9-4665-a6d6-21ccaad3e885.png",
+      "status": 200,
+      "size": 291641
+    },
+    {
+      "path": "/studio/figma-main-assets/46de75a4-bb65-4a77-9a22-ae36e069eadf.svg",
+      "status": 200,
+      "size": 779
+    },
+    {
+      "path": "/studio/figma-main-assets/4e384487-3826-43fa-adef-5c12e04b62b5.svg",
+      "status": 200,
+      "size": 1859
+    },
+    {
+      "path": "/studio/figma-main-assets/4746009f-5978-42eb-ac5e-dc4a8989beb0.svg",
+      "status": 200,
+      "size": 8809
+    },
+    {
+      "path": "/studio/figma-main-assets/4d199966-b8b4-4546-9a86-aca47b9e32f5.png",
+      "status": 200,
+      "size": 135236
+    },
+    {
+      "path": "/studio/figma-main-assets/46eccdc4-5b6a-4caf-9786-a2d64b651fc6.png",
+      "status": 200,
+      "size": 385347
+    },
+    {
+      "path": "/studio/figma-main-assets/4dba841e-aa1c-4409-a502-f6f3612c6337.png",
+      "status": 200,
+      "size": 389174
+    },
+    {
+      "path": "/studio/figma-main-assets/771e2277-8517-46a8-99a3-124ab5845eb9.svg",
+      "status": 200,
+      "size": 7313
+    },
+    {
+      "path": "/studio/figma-main-assets/528406c8-0b54-4356-9e13-57735781c2c6.svg",
+      "status": 200,
+      "size": 1487
+    },
+    {
+      "path": "/studio/figma-main-assets/4ef0b434-0ceb-4771-82a8-3450b33b484f.svg",
+      "status": 200,
+      "size": 7317
+    },
+    {
+      "path": "/studio/figma-main-assets/62e8813b-5c13-41bc-ba32-b3c3f1d6bba2.png",
+      "status": 200,
+      "size": 17111
+    },
+    {
+      "path": "/studio/figma-main-assets/5252fd3f-f98a-4df2-8b75-c38533238d19.png",
+      "status": 200,
+      "size": 461276
+    },
+    {
+      "path": "/studio/figma-main-assets/7b83036f-a362-4473-8fb2-969bbb0be787.png",
+      "status": 200,
+      "size": 363032
+    },
+    {
+      "path": "/studio/figma-main-assets/8b07c094-01c3-4838-a6ef-374aad34de72.svg",
+      "status": 200,
+      "size": 1092
+    },
+    {
+      "path": "/studio/figma-main-assets/8bfefb9d-3a43-481b-8506-52dbb3e41009.svg",
+      "status": 200,
+      "size": 2983
+    },
+    {
+      "path": "/studio/figma-main-assets/88dd164b-f1ee-4a7e-9340-35bcecb148d0.png",
+      "status": 200,
+      "size": 91627
+    },
+    {
+      "path": "/studio/figma-main-assets/91bd32e9-3d6e-44f6-a61e-b79eb0e08345.png",
+      "status": 200,
+      "size": 247657
+    },
+    {
+      "path": "/studio/figma-main-assets/8c5ef87e-ae4c-4ec5-8818-d066ad560e1b.png",
+      "status": 200,
+      "size": 18731
+    },
+    {
+      "path": "/studio/figma-main-assets/8b23e5b3-e0e9-44b5-a9d7-b721f658d271.png",
+      "status": 200,
+      "size": 853759
+    },
+    {
+      "path": "/studio/figma-main-assets/9b869b3f-000b-4284-955b-76115343a241.svg",
+      "status": 200,
+      "size": 3217
+    },
+    {
+      "path": "/studio/figma-main-assets/97008962-62d4-432f-a8ac-b49af739f79b.svg",
+      "status": 200,
+      "size": 23250
+    },
+    {
+      "path": "/studio/figma-main-assets/9843cbf8-cd23-4d9d-b998-5bcd05ad822d.svg",
+      "status": 200,
+      "size": 330
+    },
+    {
+      "path": "/studio/figma-main-assets/9507e7b8-0c3f-4b85-a59a-4c844bb1ebd7.svg",
+      "status": 200,
+      "size": 669
+    },
+    {
+      "path": "/studio/figma-main-assets/94278aad-f33e-442e-a431-525daad351aa.png",
+      "status": 200,
+      "size": 78357
+    },
+    {
+      "path": "/studio/figma-main-assets/9704c451-75cf-4b56-a38d-d42ce03dd981.png",
+      "status": 200,
+      "size": 1432444
+    },
+    {
+      "path": "/studio/figma-main-assets/b312ce6e-0c50-449c-aac1-70948adbf7dd.svg",
+      "status": 200,
+      "size": 336
+    },
+    {
+      "path": "/studio/figma-main-assets/a85eba29-af47-4d05-841b-2c405be22669.svg",
+      "status": 200,
+      "size": 2857
+    },
+    {
+      "path": "/studio/figma-main-assets/a4715511-9149-494b-8c8f-f1b22b595ba9.svg",
+      "status": 200,
+      "size": 405
+    },
+    {
+      "path": "/studio/figma-main-assets/ab2165b0-a966-43d9-bf41-3813d7d27bdd.svg",
+      "status": 200,
+      "size": 1875
+    },
+    {
+      "path": "/studio/figma-main-assets/a733e80d-1908-4a62-9fc2-b200018af9bf.png",
+      "status": 200,
+      "size": 403305
+    },
+    {
+      "path": "/studio/figma-main-assets/a63ae9a5-8996-40a0-9582-cdc6ea29f573.png",
+      "status": 200,
+      "size": 824607
+    },
+    {
+      "path": "/studio/figma-main-assets/c305b603-8beb-4b3a-9728-c50883c40522.svg",
+      "status": 200,
+      "size": 2473
+    },
+    {
+      "path": "/studio/figma-main-assets/b435c3a9-de52-4099-b871-db13b8c6aa52.svg",
+      "status": 200,
+      "size": 3207
+    },
+    {
+      "path": "/studio/figma-main-assets/b702fbaa-413e-446f-970b-ab8c52dee41d.png",
+      "status": 200,
+      "size": 363002
+    },
+    {
+      "path": "/studio/figma-main-assets/b438f744-c72c-4c43-b140-8aca352a4d8e.png",
+      "status": 200,
+      "size": 1121668
+    },
+    {
+      "path": "/studio/figma-main-assets/b5728808-9add-4edd-870d-6354896190ec.png",
+      "status": 200,
+      "size": 1541327
+    },
+    {
+      "path": "/studio/figma-main-assets/baef5dc7-9aa9-4cbf-940d-3eb017663178.png",
+      "status": 200,
+      "size": 1522187
+    },
+    {
+      "path": "/studio/figma-main-assets/dafc9056-0915-46f9-8640-ee5c1dcab098.svg",
+      "status": 200,
+      "size": 1356
+    },
+    {
+      "path": "/studio/figma-main-assets/c591c96b-b151-4ef9-a98d-b71dcf269bb2.png",
+      "status": 200,
+      "size": 4957
+    },
+    {
+      "path": "/studio/figma-main-assets/c44fbb9a-70e7-4712-8114-1cc4dc31c073.svg",
+      "status": 200,
+      "size": 779
+    },
+    {
+      "path": "/studio/figma-main-assets/c9deae00-4dde-414d-8e79-232b1b0b542c.png",
+      "status": 200,
+      "size": 182086
+    },
+    {
+      "path": "/studio/figma-main-assets/d1d2d3f5-f567-43b7-ad91-55d43867d7b3.svg",
+      "status": 200,
+      "size": 1033
+    },
+    {
+      "path": "/studio/figma-main-assets/c6292a78-09eb-49c0-85ce-76ff4d39f8d3.png",
+      "status": 200,
+      "size": 1248891
+    },
+    {
+      "path": "/studio/figma-main-assets/eca1ad25-4b8d-4c6e-b894-cf6f22a5332d.svg",
+      "status": 200,
+      "size": 332
+    },
+    {
+      "path": "/studio/figma-main-assets/f314105d-4101-485b-b5ec-44686fe129d2.svg",
+      "status": 200,
+      "size": 6094
+    },
+    {
+      "path": "/studio/figma-main-assets/df6fc0fb-db88-4bb8-a9f2-66a7087cf8e3.png",
+      "status": 200,
+      "size": 420000
+    },
+    {
+      "path": "/studio/figma-main-assets/f0d5c0c2-dbae-4909-a131-271073bdcc68.png",
+      "status": 200,
+      "size": 458396
+    },
+    {
+      "path": "/studio/figma-main-assets/f2cd0600-cea2-4eea-800e-cb3058da357e.png",
+      "status": 200,
+      "size": 415231
+    },
+    {
+      "path": "/studio/figma-main-assets/dbdd8c45-8440-4b10-9768-709eeddfff59.png",
+      "status": 200,
+      "size": 1478022
+    },
+    {
+      "path": "/studio/figma-main-assets/faae2187-0ecd-44a9-8d18-4980104aeb8c.svg",
+      "status": 200,
+      "size": 672
+    },
+    {
+      "path": "/studio/figma-main-assets/f6227101-886e-46d4-8987-eba7e89d1b21.svg",
+      "status": 200,
+      "size": 3275
+    },
+    {
+      "path": "/studio/figma-main-assets/f617ba80-6a8d-4910-8c53-24d42a001010.svg",
+      "status": 200,
+      "size": 3149
+    },
+    {
+      "path": "/studio/figma-main-assets/f703939d-8cdb-4d22-91a3-15463eccd147.svg",
+      "status": 200,
+      "size": 9556
+    },
+    {
+      "path": "/studio/figma-main-assets/fb88d2b1-b518-49b6-99b8-648f8c418d80.svg",
+      "status": 200,
+      "size": 5438
+    },
+    {
+      "path": "/studio/figma-main-assets/f47ed1a2-2871-4ff2-b8a8-aa53432bac16.png",
+      "status": 200,
+      "size": 148123
+    },
+    {
+      "path": "/studio/figma-main-assets/fffcb5e7-d2c9-462d-af73-598f5ec569b8.svg",
+      "status": 200,
+      "size": 48251
+    },
+    {
+      "path": "/studio/figma-assets/Poppins-Medium.ttf",
+      "status": 200,
+      "size": 158576
+    },
+    {
+      "path": "/studio/figma-main-assets/Rowdies-Regular.ttf",
+      "status": 200,
+      "size": 76352
+    },
+    {
+      "path": "/studio/figma-assets/Poppins-Bold.ttf",
+      "status": 200,
+      "size": 155996
+    },
+    {
+      "path": "/studio/figma-main-assets/fef67405-da47-44b2-82d9-84bdc0cc3096.png",
+      "status": 200,
+      "size": 2256361
+    },
+    {
+      "path": "/studio/figma-main-assets/fe429b7f-8916-4641-aa6c-e46281abf41d.png",
+      "status": 200,
+      "size": 2131782
+    },
+    {
+      "path": "/studio/figma-main-assets/rugby-union.svg",
+      "status": 404
+    },
+    {
+      "path": "/studio/figma-main-assets/dota.svg",
+      "status": 404
+    },
+    {
+      "path": "/studio/figma-main-assets/snooker.svg",
+      "status": 404
+    },
+    {
+      "path": "/studio/figma-main-assets/football.svg",
+      "status": 404
+    },
+    {
+      "path": "/studio/figma-main-assets/Rowdies-Bold.ttf",
+      "status": 200,
+      "size": 76280
+    },
+    {
+      "path": "/studio/figma-main-assets/tennis.svg",
+      "status": 404
+    },
+    {
+      "path": "/studio/figma-assets/0e27bb34-898b-4469-ab0d-e2a0d02e9cee.svg",
+      "status": 200,
+      "size": 3275
+    },
+    {
+      "path": "/studio/figma-assets/11495f84-e377-4e57-ae24-409fac0719fe.svg",
+      "status": 200,
+      "size": 688
+    },
+    {
+      "path": "/studio/figma-main-assets/csgo.svg",
+      "status": 404
+    },
+    {
+      "path": "/studio/figma-assets/2b99bef9-b02d-41c8-95c0-676b97d40230.svg",
+      "status": 200,
+      "size": 1343
+    },
+    {
+      "path": "/studio/figma-assets/1ee2bf4b-d7de-4753-9755-bd20e81b49b2.png",
+      "status": 200,
+      "size": 498768
+    },
+    {
+      "path": "/studio/figma-assets/194e1bd6-cb69-474b-9027-01d34784f8c2.png",
+      "status": 200,
+      "size": 1010098
+    },
+    {
+      "path": "/studio/figma-assets/3fb72246-d195-4600-b0a6-6124f77731ca.svg",
+      "status": 200,
+      "size": 236
+    },
+    {
+      "path": "/studio/figma-assets/3f5d181c-cada-4bc2-a1ae-3be82fb6bb27.svg",
+      "status": 200,
+      "size": 8393
+    },
+    {
+      "path": "/studio/figma-assets/37f7b798-43bf-477d-b23f-9a04bbe07f1f.svg",
+      "status": 200,
+      "size": 762
+    },
+    {
+      "path": "/studio/figma-assets/2febed9d-16fd-4136-8629-cb3dc6d8feaf.svg",
+      "status": 200,
+      "size": 3212
+    },
+    {
+      "path": "/studio/figma-assets/3771c602-fa58-4182-85e3-82277396f68b.svg",
+      "status": 200,
+      "size": 3040
+    },
+    {
+      "path": "/studio/figma-assets/2e1d9a10-b393-474d-bc41-e861618739af.png",
+      "status": 200,
+      "size": 478401
+    },
+    {
+      "path": "/studio/figma-assets/52569ec1-38ce-4823-9663-09ec31db1571.svg",
+      "status": 200,
+      "size": 8801
+    },
+    {
+      "path": "/studio/figma-assets/4f29401c-0a2f-4622-bf80-8dc054d88ce0.png",
+      "status": 200,
+      "size": 2173762
+    },
+    {
+      "path": "/studio/figma-assets/541c6962-0cc8-4e91-8a0b-a79120e1fc93.png",
+      "status": 200,
+      "size": 965912
+    },
+    {
+      "path": "/studio/figma-assets/57395a87-2ee1-4dc0-a43e-64a012026139.png",
+      "status": 200,
+      "size": 895274
+    },
+    {
+      "path": "/studio/figma-assets/68cec14f-7e30-4e7d-b29c-f9cefbb5b71f.png",
+      "status": 200,
+      "size": 1030787
+    },
+    {
+      "path": "/studio/figma-assets/6ae9c94b-6dfc-4931-b638-a6432ce82b06.png",
+      "status": 200,
+      "size": 5516500
+    },
+    {
+      "path": "/studio/figma-assets/b68ca8bc-74a5-490a-a564-f583a88b5119.svg",
+      "status": 200,
+      "size": 3554
+    },
+    {
+      "path": "/studio/figma-assets/a6c4f7da-47eb-45cb-a0d7-53585122364d.svg",
+      "status": 200,
+      "size": 1919
+    },
+    {
+      "path": "/studio/figma-assets/b5862dab-07cd-4e2d-8810-3a6d0f94b621.svg",
+      "status": 200,
+      "size": 748
+    },
+    {
+      "path": "/studio/figma-assets/776893ae-a656-476f-acfb-2996816e754f.svg",
+      "status": 200,
+      "size": 236
+    },
+    {
+      "path": "/studio/figma-assets/9c499640-97f3-4447-b339-db8f3b370542.png",
+      "status": 200,
+      "size": 316949
+    },
+    {
+      "path": "/studio/figma-assets/7638bad7-dd93-42b8-9216-0f2a1b9829af.png",
+      "status": 200,
+      "size": 1042208
+    },
+    {
+      "path": "/studio/figma-assets/dd15a4d3-fb68-4421-a2ab-85659ab6b1b3.svg",
+      "status": 200,
+      "size": 2852
+    },
+    {
+      "path": "/studio/figma-assets/d331b57b-93fa-4ef4-b434-339aad806b02.svg",
+      "status": 200,
+      "size": 333
+    },
+    {
+      "path": "/studio/figma-assets/d128f74c-8c3a-4c79-86b9-c061c553c7cf.svg",
+      "status": 200,
+      "size": 1873
+    },
+    {
+      "path": "/studio/figma-assets/e561e67c-421c-4d51-a354-69ef749a7b01.svg",
+      "status": 200,
+      "size": 7312
+    },
+    {
+      "path": "/studio/figma-assets/c88edb00-036c-4b7b-9dc6-de86b3e66d38.png",
+      "status": 200,
+      "size": 1836607
+    },
+    {
+      "path": "/studio/figma-assets/d9b1ab92-b18b-4134-b6cb-dba3c4149462.png",
+      "status": 200,
+      "size": 860160
+    },
+    {
+      "path": "/studio/figma-assets/f02edf37-82a6-4d21-b934-c3e7050bc8b9.svg",
+      "status": 200,
+      "size": 3144
+    },
+    {
+      "path": "/studio/figma-assets/f11105b5-8070-47e4-ab03-15ca33cd1720.svg",
+      "status": 200,
+      "size": 1354
+    },
+    {
+      "path": "/studio/figma-assets/f0cfcc71-6037-4eca-b9c9-04b64205c6be.svg",
+      "status": 200,
+      "size": 3469
+    },
+    {
+      "path": "/studio/figma-assets/f7de1435-6b68-47fb-ac1a-0561c47d7cc2.svg",
+      "status": 200,
+      "size": 2472
+    },
+    {
+      "path": "/studio/figma-assets/efdb029d-4add-4264-812a-c47206b54e94.svg",
+      "status": 200,
+      "size": 4431
+    },
+    {
+      "path": "/studio/figma-assets/f947ec65-27c6-42df-bfac-933899514c3b.png",
+      "status": 200,
+      "size": 120121
+    },
+    {
+      "path": "/studio/figma-assets/ff688508-0bc1-4f4a-8935-9c6b9073cca0.png",
+      "status": 200,
+      "size": 4444
+    },
+    {
+      "path": "/studio/figma-assets/rugby-union.svg",
+      "status": 404
+    },
+    {
+      "path": "/studio/figma-assets/fdbac8ab-b340-4c17-9b12-e118c3111367.svg",
+      "status": 200,
+      "size": 1333
+    },
+    {
+      "path": "/studio/figma-assets/football.svg",
+      "status": 404
+    },
+    {
+      "path": "/studio/figma-assets/tennis.svg",
+      "status": 404
+    },
+    {
+      "path": "/studio/figma-assets/snooker.svg",
+      "status": 404
+    },
+    {
+      "path": "/studio/vendor/three.core.js",
+      "status": 200,
+      "size": 1474799
+    },
+    {
+      "path": "/studio/vendor/three.js",
+      "status": 404
+    },
+    {
+      "path": "/studio/vendor/nx.png",
+      "status": 404
+    },
+    {
+      "path": "/studio/vendor/py.png",
+      "status": 404
+    },
+    {
+      "path": "/studio/vendor/px.png",
+      "status": 404
+    },
+    {
+      "path": "/studio/vendor/textures/sprite.png",
+      "status": 404
+    },
+    {
+      "path": "/studio/vendor/sprite.png",
+      "status": 404
+    },
+    {
+      "path": "/studio/vendor/pz.png",
+      "status": 404
+    },
+    {
+      "path": "/studio/vendor/normal.png",
+      "status": 404
+    },
+    {
+      "path": "/studio/vendor/nz.png",
+      "status": 404
+    },
+    {
+      "path": "/studio/vendor/ny.png",
+      "status": 404
+    },
+    {
+      "path": "/studio/vendor/diffuse.png",
+      "status": 404
+    },
+    {
+      "path": "/studio/vendor/animations/animation.js",
+      "status": 404
+    },
+    {
+      "path": "/studio/vendor/image.png",
+      "status": 404
+    },
+    {
+      "path": "/studio/vendor/textures/land_ocean_ice_cloud_2048.jpg",
+      "status": 404
+    },
+    {
+      "path": "/studio/vendor/models/json/pressure.json",
+      "status": 404
+    },
+    {
+      "path": "/studio/vendor/models/json/example.json",
+      "status": 404
+    },
+    {
+      "path": "/studio/vendor/material.json",
+      "status": 404
+    },
+    {
+      "path": "/studio/icon-samples/royal-coins.png",
+      "status": 200,
+      "size": 103634
+    },
+    {
+      "path": "/studio/icon-samples/ruby-chips.png",
+      "status": 200,
+      "size": 97797
+    },
+    {
+      "path": "/studio/icon-samples/obsidian-cards.png",
+      "status": 200,
+      "size": 84221
+    },
+    {
+      "path": "/studio/icon-samples/ruby-dice.png",
+      "status": 200,
+      "size": 79367
+    },
+    {
+      "path": "/studio/icon-samples/gold-slot.png",
+      "status": 200,
+      "size": 115304
+    },
+    {
+      "path": "/studio/icon-samples/gold-roulette.png",
+      "status": 200,
+      "size": 134402
+    },
+    {
+      "path": "/studio/icon-samples/amethyst-crown.png",
+      "status": 200,
+      "size": 103130
+    },
+    {
+      "path": "/studio/icon-samples/sapphire-gem.png",
+      "status": 200,
+      "size": 51018
+    },
+    {
+      "path": "/studio/icon-samples/amethyst-gift.png",
+      "status": 200,
+      "size": 113028
+    },
+    {
+      "path": "/studio/icon-samples/emerald-chest.png",
+      "status": 200,
+      "size": 123840
+    },
+    {
+      "path": "/studio/icon-samples/gold-trophy.png",
+      "status": 200,
+      "size": 108412
+    },
+    {
+      "path": "/studio/icon-samples/chrome-basketball.png",
+      "status": 200,
+      "size": 76942
+    },
+    {
+      "path": "/studio/fonts/Poppins-OFL.txt",
+      "status": 200,
+      "size": 4385
+    },
+    {
+      "path": "/studio/figma-main-assets/Rowdies-OFL.txt",
+      "status": 200,
+      "size": 4384
+    }
+  ]
+}
