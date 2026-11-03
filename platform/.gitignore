@@ -8,3 +8,11 @@ original.html
 .sites-runtime/
 .sites-checkout/
 screenshots/
+/dist/
+/.next/
+/.vinext/
+/.wrangler/
+.dev.vars*
+*.tsbuildinfo
+next-env.d.ts
+.env.key-setup/

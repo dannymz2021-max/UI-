@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="color-scheme" content="light">
   <meta name="theme-color" content="#7154ed">
-  <meta name="description" content="UI工作室：3D Icon 生成、图片生成、图层拆解、UI 设计与素材整理，一起完成你的设计工作。">
+  <meta name="description" content="UI工作室：AI图像与Icon生成、图层拆解、UI 设计与素材整理，一起完成你的设计工作。">
   <title>UI工作室</title>
   <link rel="icon" href="/splitter/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./studio.css">
   <link rel="stylesheet" href="./studio-home.css">
   <link rel="stylesheet" href="./ui-studio.css">
-  <link rel="stylesheet" href="./workspace-scroll.css">
+  <link rel="stylesheet" href="./workspace-scroll.css"><link rel="stylesheet" href="./creator.css">
 </head>
 <body>
   <div class="studio-shell">
@@ -24,8 +24,7 @@
       <nav class="sidebar-nav" aria-label="创作工具">
         <div class="sidebar-section-label">创作工作台</div>
         <button type="button" class="nav-item active" data-view="start" aria-current="page"><span data-icon="home" aria-hidden="true"></span><span>工作室首页</span></button>
-        <button type="button" class="nav-item" data-view="icons"><span data-icon="components" aria-hidden="true"></span><span>Icon 生成工作台</span><small class="nav-badge">3D</small></button>
-        <button type="button" class="nav-item" data-view="image"><span data-icon="image" aria-hidden="true"></span><span>AI 图像生成</span><small class="nav-badge nav-badge-soft">AI</small></button>
+        <button type="button" class="nav-item" data-view="creator"><span data-icon="sparkles" aria-hidden="true"></span><span>AI创作台</span><small class="nav-badge">AI</small></button>
         <button type="button" class="nav-item" data-view="splitter"><span data-icon="layers" aria-hidden="true"></span><span>图片图层拆解</span></button>
         <button type="button" class="nav-item" data-view="ui"><span data-icon="layout" aria-hidden="true"></span><span>UI 页面生成</span></button>
         <button type="button" class="nav-item" data-view="system"><span data-icon="palette" aria-hidden="true"></span><span>组件与变量</span></button>
@@ -35,7 +34,7 @@
       </nav>
       <div class="sidebar-bottom">
         <div class="sidebar-local-note"><span class="local-status-dot"></span><div><strong>你的浏览器，你的素材</strong><p>本地素材保存在当前浏览器。<br>重要作品记得下载留存。</p></div></div>
-        <button id="about-button" type="button" class="sidebar-about"><span data-icon="help" aria-hidden="true"></span><span>关于UI工作室</span><small>v6.0</small></button>
+        <button id="about-button" type="button" class="sidebar-about"><span data-icon="help" aria-hidden="true"></span><span>关于UI工作室</span><small>v7.0</small></button>
       </div>
     </aside>
     <div class="studio-main">
@@ -45,8 +44,7 @@
       </header>
       <main id="workspace-area" class="workspace-area">
         <section id="view-start" class="studio-view" aria-label="工作室首页"></section>
-        <section id="view-icons" class="studio-view" aria-label="Icon 生成工作台" hidden></section>
-        <section id="view-image" class="studio-view" aria-label="AI 图像生成" hidden></section>
+        <section id="view-creator" class="studio-view" aria-label="AI创作台" hidden></section>
         <section id="view-splitter" class="studio-view" aria-label="图片图层拆解" hidden><div class="splitter-toolbar"><div><span class="splitter-title">图片图层拆解</span><span class="muted">提取、检查与导出独立图层</span></div><button class="btn primary" id="splitter-export-project" type="button">导出分层文件</button><a class="btn subtle" href="/splitter/index.html" target="_blank" rel="noopener">独立窗口打开 <span aria-hidden="true">↗</span></a></div><iframe id="splitter-frame" src="about:blank" title="图片图层拆解" class="splitter-frame" allow="clipboard-read; clipboard-write"></iframe></section>
         <section id="view-ui" class="studio-view" aria-label="UI 页面生成" hidden></section>
         <section id="view-system" class="studio-view" aria-label="设计系统" hidden></section>

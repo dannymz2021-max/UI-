@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import assert from 'node:assert/strict';
-const root=path.resolve('dist');
+const root=path.resolve('public');
 const files=await fs.readdir(root,{recursive:true});
 const missing=[];
 let syntax=0,refs=0;
@@ -23,8 +23,9 @@ for(const file of files){
     try{await fs.access(target);}catch{missing.push({file,path:v});}
   }
 }
-const status=JSON.parse(await fs.readFile('dist/api/studio/status','utf8'));
-assert.equal(status.generationReady,false);
-assert.equal(status.uiReady,false);
+for(const file of ['server/creator.mjs','server/png.mjs']){const r=spawnSync(process.execPath,['--check',file],{encoding:'utf8'});assert.equal(r.status,0,r.stderr);syntax++;}
+const html=await fs.readFile('public/studio/index.html','utf8');
+assert.ok(html.includes('data-view="creator"'));
+assert.ok(!html.includes('data-view="icons"')&&!html.includes('data-view="image"'));
 assert.deepEqual(missing,[],'Missing static dependencies: '+JSON.stringify(missing));
 console.log(JSON.stringify({syntaxChecked:syntax,assetReferences:refs,missing:missing.length,status:'passed'}));

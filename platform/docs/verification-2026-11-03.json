@@ -1,0 +1,9 @@
+{
+  "date": "2026-11-03",
+  "unifiedEntrypoint": "/studio/#creator",
+  "automatedTestsPassed": 13,
+  "staticReferencesChecked": 472,
+  "realGenerationVerified": false,
+  "realEditingVerified": false,
+  "mockTestsAreNotQualityEvidence": true
+}
