@@ -98,6 +98,7 @@ export async function handleCreator(request,env,fetcher=fetch){
  if(request.method==='GET'&&job)return json({ok:true,job:jobView(await loadJob(env,checkId(job[1]),owner))});
  if(request.method!=='POST')fail('METHOD_NOT_ALLOWED','此操作不支持该请求方式。',405);
  const body=await bodyJSON(request);
+ if(['/api/creator/interpret','/api/creator/generate'].includes(u.pathname)&&(body.transport!=='api'||body.allowPaidAPI!==true))fail('PAID_API_REQUIRED','请明确选择按量收费 API 并确认费用；桌面免费模式不会调用此接口。',403);
  if(u.pathname==='/api/creator/interpret'){
  const inputs=await validateInputs(body),recent=await env.DB.prepare('SELECT COUNT(*) AS n FROM creator_briefs WHERE owner=? AND created_at>?').bind(owner,Date.now()-60000).first();if((recent?.n||0)>=5)fail('RATE_LIMITED','整理需求过于频繁，请稍后继续。',429);
  const content=[{type:'input_text',text:`原始需求：${inputs.prompt}\n参考用途：${inputs.references.map((x,i)=>`${i+1}:${x.role}`).join('；')}\n${inputs.baseImage?'第一张图片是修改基图。上一版要求中未被这次修改覆盖的部分继续保留：'+JSON.stringify(inputs.previousRequirements):'没有修改基图。'}`}];
