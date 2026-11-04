@@ -13,8 +13,8 @@ const rawPrompt='参考皇冠的材质生成一枚足球Icon，透明背景，�
 function brief(){return {kind:'icon',summary:'一枚透明足球Icon',subjects:['一枚足球'],style:['精致商业质感'],materials:['参考图中的紫晶与黄金'],colors:[],composition:['主体完整居中'],texts:[],prohibitions:['皇冠','文字'],preserve:[],background:'transparent',size:{width:1024,height:1024,explicit:false},referenceRoles:[{index:0,role:'material',explanation:'仅迁移材质，不迁移皇冠主体。'}],clarification:[],providerPrompt:rawPrompt};}
 function fixture(options={}){const db=new DatabaseSync(':memory:');for(const migration of fs.readdirSync('drizzle').filter(x=>x.endsWith('.sql')).sort())db.exec(fs.readFileSync('drizzle/'+migration,'utf8'));const objects=new Map(),calls=[];
  const adapter={prepare(sql){return {bind(...args){const s=db.prepare(sql);return {async first(){return s.get(...args)||null;},async run(){const r=s.run(...args);return {meta:{changes:Number(r.changes)}};}};}};}};
- const env={OPENAI_API_KEY:'test-only-placeholder',AI_DAILY_LIMIT:'10',DB:adapter,BUCKET:{async put(k,v){objects.set(k,Buffer.from(v));},async get(k){return objects.has(k)?{body:objects.get(k)}:null;}}};
- const fetcher=async(url,init)=>{calls.push({url,body:JSON.parse(init.body)});if(url.endsWith('/responses'))return Response.json({output:[{content:[{type:'output_text',text:JSON.stringify(options.brief||brief())}]}]},{headers:{'x-request-id':'req-interpret-test'}});if(options.error)return Response.json({error:{code:options.error}},{status:429,headers:{'x-request-id':'req-failed-test'}});return Response.json({data:[{b64_json:(options.image||png()).toString('base64')}],usage:{output_tokens:1}},{headers:{'x-request-id':'req-generate-test'}});};
+ const env={OPENAI_API_KEY:'test-only-placeholder',AI_DAILY_LIMIT:'10',DB:adapter,BUCKET:{async put(k,v){objects.set(k,Buffer.from(v));},async get(k){return objects.has(k)?{body:objects.get(k)}:null;}},...options.env};
+ const fetcher=async(url,init)=>{const payload=JSON.parse(init.body);calls.push({url,body:payload});if(options.reply)return options.reply(url,payload,calls);if(url.endsWith('/responses'))return Response.json({output:[{content:[{type:'output_text',text:JSON.stringify(options.brief||brief())}]}]},{headers:{'x-request-id':'req-interpret-test'}});if(options.error)return Response.json({error:{code:options.error}},{status:429,headers:{'x-request-id':'req-failed-test'}});return Response.json({data:[{b64_json:(options.image||png()).toString('base64')}],usage:{output_tokens:1}},{headers:{'x-request-id':'req-generate-test'}});};
  const request=(route,body,owner='owner-a',origin='https://studio.test')=>new Request('https://studio.test/api/creator/'+route,{method:body?'POST':'GET',headers:{...(owner?{'oai-authenticated-user-id':owner}:{}),origin,...(body?{'content-type':'application/json'}:{})},body:body?JSON.stringify(body):undefined});
  const call=async(route,body,owner,origin)=>{const r=await handleCreator(request(route,body,owner,origin),env,fetcher);return {status:r.status,body:await r.json()};};
  return {db,env,fetcher,request,call,calls,objects};}
@@ -33,6 +33,15 @@ test('credit_balance_exhausted不能误报为普通限流',async()=>{const f=fix
 test('没有真实透明像素的结果不作为透明PNG交付',async()=>{const f=fixture({image:png(1024,1024,false)}),r=await f.call('generate',await planned(f));assert.equal(r.body.job.status,'failed');assert.equal(r.body.job.error.code,'ALPHA_MISSING');assert.equal(f.objects.size,0);});
 test('24小时限制由服务端执行，客户端不能绕过',async()=>{const f=fixture();f.env.AI_DAILY_LIMIT='1';await f.call('generate',await planned(f));const r=await f.call('generate',await planned(f));assert.equal(r.status,429);assert.equal(r.body.error.code,'GENERATION_LIMIT');assert.equal(f.calls.filter(x=>x.url.includes('/images/')).length,1);});
 test('指纹包含参考用途及上版要求，防止整理与生成上下文不一致',async()=>{const i=await validateInputs({prompt:rawPrompt}),a=await fingerprint(i);i.previousRequirements={prohibitions:['不要皇冠']};assert.notEqual(a,await fingerprint(i));});
+test('切换豆包后不读取OpenAI的历史额度错误，并实际调用Ark的Responses和生图端点',async()=>{
+ const b=brief();b.background='opaque';
+ const f=fixture({env:{AI_PROVIDER:'ark',ARK_API_KEY:'ark-test-key'},brief:b,image:png(1024,1024,false)});
+ const plan=await planned(f);assert.equal((await f.call('status')).body.provider,'ark');
+ const result=await f.call('generate',plan);assert.equal(result.body.job.status,'succeeded');
+ assert.ok(f.calls.every(x=>x.url.startsWith('https://ark.cn-beijing.volces.com/api/v3/')));
+ assert.equal(f.calls[0].body.input[0].role,'system');assert.equal(f.calls[1].body.output_format,'png');
+ assert.equal(f.calls[1].body.response_format,'b64_json');assert.equal(f.calls[1].body.background,'opaque');
+});
 test('UI 规划收到原始 PRD 和参考图；同用户重复请求受限，非法区块不会交给渲染器',async()=>{
  const output={family:'activity',mode:'dark',regions:['hero','steps'],gaps:[],title:'Bienvenido',subtitle:'',buttonLabel:'Ver más'};
  const valid=fixture({brief:output}),invalid=fixture({brief:{...output,regions:['hero','leagues']}});

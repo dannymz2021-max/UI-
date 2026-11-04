@@ -33,7 +33,20 @@ pnpm run dev
 
 打开终端打印的本地地址 `/studio/#creator`。本地登录使用模板提供的测试身份。生产环境沿用 Sites 登录及现有私有访问权限。
 
-## 模型与安全配置
+## 豆包与模型配置
+
+生产环境改用 `AI_PROVIDER=ark`：
+
+- `ARK_API_KEY`：火山方舟专用密钥，保存为站点后端 secret。
+- `ARK_TEXT_MODEL=doubao-seed-2-1-pro-260915`：需求、参考图、PRD 的识别和严格 JSON 规划。
+- `ARK_IMAGE_MODEL=doubao-seedream-5-0-pro-260628`：生图与自然语言图片编辑。
+- 仅使用火山方舟标准 API；Agent Plan 的专属密钥和接口不能直接套用。
+
+选择豆包后，全部新模型请求仅调用火山方舟。保留的 OpenAI 配置用于明确切换回 `AI_PROVIDER=openai` 时使用，不会自动回退并产生其他服务商的费用。
+
+透明图采用两种流程：已有透明基图且无额外参考时，执行透明编辑；新透明图或多图参考时，先生成，再调用 Seedream 图层拆分提取单一完整前景，按官方边界框还原到原画布并检查真实 Alpha。若返回多个前景层、坐标不符或无有效 Alpha，会停止交付并说明原因。此路径会产生额外用量；模型语义与边缘保真仍需对照原需求验收。
+
+## OpenAI 兼容配置
 
 - 文本需求理解：`OPENAI_TEXT_MODEL`，默认 `gpt-6-astra`。
 - 图像生成和编辑：`OPENAI_IMAGE_MODEL`，默认固定为 `gpt-image-2.5-sunburst-2026-09-08`。
@@ -44,6 +57,8 @@ pnpm run dev
 本地密钥通过批准的安全配置流程写入 `.env.local`。该文件和密钥准备目录均已忽略，不能提交或加入源码包。线上密钥应通过 Sites 的安全环境变量配置功能设置；仓库只记录变量名称。
 
 ## 当前真实验收状态
+
+2026-11-04：豆包密钥已由用户通过本地隐藏输入框保存到忽略文件 `.env.ark.local`。一次真实 Responses 请求返回 `ModelNotOpen`；需求理解模型需要在火山方舟开通，图像质量、透明图提取和编辑保留效果尚未完成真实模型验收。接口、坐标、隔离和错误处理测试使用模拟响应，不能替代真实画面验收。
 
 2026-11-03：新建专用密钥已在本地安全保存。对文本模型和图像模型的访问认证均返回HTTP 200。一次真实需求理解请求返回 `credit_balance_exhausted / insufficient_quota`，因此尚未完成真实生成或编辑的质量验收。不能把模型可访问、代码测试通过或示例图片当成真实生图成功。
 
@@ -65,8 +80,8 @@ pnpm run dev
 
 ```sh
 node scripts/check.mjs
-node --test tests/creator.test.mjs tests/ui-compose.test.mjs
-node --env-file=.env.local scripts/check-secrets.mjs
+node --test tests/creator.test.mjs tests/ui-compose.test.mjs tests/ark.test.mjs
+node --env-file=.env.local --env-file=.env.ark.local scripts/check-secrets.mjs
 ```
 
 静态资源、脚本语法和13项接口/文件测试已通过。接口测试使用模拟模型响应验证状态与计费防重，不能证明模型实际画面质量。浏览器已验证统一入口、参考图上传、参考用途选择、刷新恢复、服务错误提示与布局。
@@ -74,3 +89,5 @@ node --env-file=.env.local scripts/check-secrets.mjs
 `scripts/verify-openai.mjs` 可读取本地环境安全验证真实模型；不会输出密钥。默认只整理一次测试需求，显式追加 `--generate` 才会执行图像生成。额度错误不得自动重试。
 
 源码位置：`public/studio/` 为创作界面；`public/splitter/` 为拆层；`server/` 为模型请求与PNG校验；`db/`、`drizzle/` 为任务及服务状态；`worker/` 为服务入口。
+
+豆包开通后可运行 `node --env-file=.env.ark.local scripts/verify-ark.mjs` 验证一次需求理解。追加 `--generate --edit` 才执行参考图生图、透明主体提取及一次自然语言修改，产物保存在忽略的 `.sites-runtime/ark-verification/`。密钥不会打印到输出。
