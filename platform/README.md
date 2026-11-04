@@ -6,6 +6,17 @@
 
 描述需求 → 可选参考图 → 需求清单 → 真实模型调用 → 自然语言修改 → 历史版本 → PNG下载或继续拆层。
 
+### 费用与前期抽卡（2026-11-04）
+
+- 默认「省钱抽卡」：`ARK_PREVIEW_MODEL=doubao-seedream-5-0-flash-260915`，按原构图比例输出约 1K 不透明 PNG，一次一张，普通生图标价 0.12 元／张。低分辨率不会进一步降低其按张单价。原始最终尺寸和透明背景要求保留在清单 `requestedOutput`，预览不冒充最终成品。
+- 「正式输出」使用已配置的 Pro，按要求尺寸输出。新透明图需要额外拆层，必须在前端勾选且服务端收到 `allowPaidExtraction=true` 才能开始；已有真实透明基图且没有额外参考可走一次透明编辑。按实际输出图层逐张计费，没有未经选择的自动追加处理。
+- 需求未改变且清单未过期时复用已有解读，抽卡不重复调用文字理解。每次图片模型成功返回后立即保存请求编号、用量及图片费用估算；即使后续校验或拆层失败，查询任务仍能看到前面可能已计费的调用。估算不含文字理解，不等于服务商账单，也不是账户级硬预算。
+- 模型未开通、余额不足或限流时停止，不自动换成更贵模型，不自动重试。Flash 在本次只读检查中尚未开通，需用户在方舟开通后才能实际调用；此轮没有发起真实生图或文字测试。
+- 豆包网页辅助入口提供「复制原始提示词 → 打开豆包 → 手动导入结果」。这条路径不调用创作台模型 API，不嵌入登录、不保存豆包 Cookie。豆包网页的免费额度与方舟 API 不通用，是否免费以用户账号页面为准。
+- 已核对的免费候选：硅基流动官方价格页标记 `Kwai-Kolors/Kolors` 为免费，需要单独的账号与密钥，尚未接入。方舟账号开通管理显示 Seedream 5.0 Lite 剩余 50 张免费额度但尚未开通，用完后的标价为 0.22 元／张，不能视为永久免费。
+
+价格依据：https://docs.volcengine.com/docs/ark/model-pricing?lang=zh&redirect=1 ；https://www.siliconflow.cn/pricing 。30 项本地测试通过，使用模拟响应验证调用次数与费用保护，不代表 Flash 的真实画面质量已验收。
+
 取消了主流程中的手工建模、主体拼装及材质/镜头/灯光滑杆。主站、活动、拆层、组件快照与原作品库继续保留。素材库中的旧图标明确标为历史参考，不会冒充AI生成结果。
 
 ## 按需求生成 Megwin 页面
@@ -90,6 +101,6 @@ node --env-file=.env.local --env-file=.env.ark.local scripts/check-secrets.mjs
 
 源码位置：`public/studio/` 为创作界面；`public/splitter/` 为拆层；`server/` 为模型请求与PNG校验；`db/`、`drizzle/` 为任务及服务状态；`worker/` 为服务入口。
 
-豆包开通后可运行 `node --env-file=.env.ark.local scripts/verify-ark.mjs` 验证一次需求理解。追加 `--generate --edit` 才执行参考图生图、透明主体提取及一次自然语言修改，产物保存在忽略的 `.sites-runtime/ark-verification/`。密钥不会打印到输出。
+真实验收脚本默认不调用模型。经明确同意测试费用后，可使用 `node --env-file=.env.ark.local scripts/verify-ark.mjs --allow-paid-test` 验证一次需求理解；追加 `--generate` 验证 Flash 预览；只有再加 `--final --allow-paid-extraction` 才允许正式透明图的额外拆层；`--edit` 另外验证一次修改。产物保存在忽略的 `.sites-runtime/ark-verification/`，密钥不会打印到输出。
 
 若普通生图已返回但后续提取失败，可追加 `--resume-image .sites-runtime/ark-verification/<原图文件>.png` 复用已保存的真实原图，只重新验证提取和修改。脚本会明确标记缓存复用并记录原图摘要；不把缓存步骤说成新的模型调用。

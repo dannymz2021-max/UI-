@@ -1,11 +1,12 @@
 export const OPENAI_IMAGE_MODEL='gpt-image-2.5-sunburst-2026-09-08';
 export const OPENAI_TEXT_MODEL='gpt-6-astra';
 export const ARK_IMAGE_MODEL='doubao-seedream-5-0-pro-260628';
+export const ARK_PREVIEW_MODEL='doubao-seedream-5-0-flash-260915';
 export const ARK_TEXT_MODEL='doubao-seed-2-1-pro-260915';
 
 export function providerConfig(env){
  const id=env.AI_PROVIDER||'openai';
- if(id==='ark')return {id,label:'豆包 · 火山方舟',key:env.ARK_API_KEY,base:'https://ark.cn-beijing.volces.com/api/v3/',imageModel:env.ARK_IMAGE_MODEL||ARK_IMAGE_MODEL,textModel:env.ARK_TEXT_MODEL||ARK_TEXT_MODEL};
+ if(id==='ark')return {id,label:'豆包 · 火山方舟',key:env.ARK_API_KEY,base:'https://ark.cn-beijing.volces.com/api/v3/',imageModel:env.ARK_IMAGE_MODEL||ARK_IMAGE_MODEL,previewModel:env.ARK_PREVIEW_MODEL||ARK_PREVIEW_MODEL,textModel:env.ARK_TEXT_MODEL||ARK_TEXT_MODEL};
  if(id==='openai')return {id,label:'OpenAI',key:env.OPENAI_API_KEY,base:'https://api.openai.com/v1/',imageModel:env.OPENAI_IMAGE_MODEL||OPENAI_IMAGE_MODEL,textModel:env.OPENAI_TEXT_MODEL||OPENAI_TEXT_MODEL};
  throw Object.assign(new Error('模型服务商配置无效，请检查后台配置。'),{code:'PROVIDER_CONFIG_INVALID',status:503});
 }

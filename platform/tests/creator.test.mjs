@@ -59,3 +59,38 @@ test('UI 规划收到原始 PRD 和参考图；同用户重复请求受限，非
  assert.equal((await handleCreator(req(),valid.env,valid.fetcher)).status,429);assert.equal(valid.calls.length,1);
  const bad=await handleCreator(req(),invalid.env,invalid.fetcher);assert.equal(bad.status,502);assert.equal((await bad.json()).error.code,'UI_PLAN_INVALID');
 });
+
+test('默认抽卡使用Flash和约1K不透明预览，保留最终需求且只调用一次图片模型',async()=>{
+ const b=brief();b.size={width:2048,height:2048,explicit:true};
+ const f=fixture({env:{AI_PROVIDER:'ark',ARK_API_KEY:'ark-test'},brief:b,image:png(1024,1024,false)}),input=await planned(f);
+ const saved=JSON.parse(f.db.prepare('SELECT brief_json FROM creator_briefs WHERE id=?').get(input.briefId).brief_json);
+ assert.equal(saved.requestedOutput.background,'transparent');assert.equal(saved.requestedOutput.size.width,2048);
+ assert.equal(saved.background,'opaque');assert.equal(saved.size.width,1024);assert.equal(saved.cost.maxImageCny,0.12);
+ const result=await f.call('generate',{...input,allowPaidExtraction:true});
+ assert.equal(result.body.job.status,'succeeded');assert.equal(result.body.job.usage.estimatedImageCny,0.12);
+ const images=f.calls.filter(x=>x.url.includes('/images/'));assert.equal(images.length,1);
+ assert.equal(images[0].body.model,'doubao-seedream-5-0-flash-260915');assert.equal(images[0].body.background,'opaque');assert.equal(images[0].body.layer_decomposition,undefined);
+ // Another draw reuses the reviewed brief, with no second paid interpretation.
+ await f.call('generate',{...input,requestId:crypto.randomUUID()});
+ assert.equal(f.calls.filter(x=>x.url.endsWith('/responses')).length,1);assert.equal(f.calls.filter(x=>x.url.includes('/images/')).length,2);
+});
+test('正式透明输出未同意拆层费用时，服务端在任何生图请求之前拒绝',async()=>{
+ const f=fixture({env:{AI_PROVIDER:'ark',ARK_API_KEY:'ark-test'}}),input=await planned(f,{renderMode:'final'}),r=await f.call('generate',input);
+ assert.equal(r.body.error.code,'PAID_EXTRACTION_REQUIRED');assert.equal(f.calls.filter(x=>x.url.includes('/images/')).length,0);
+ assert.equal(f.db.prepare('SELECT COUNT(*) AS n FROM creator_jobs').get().n,0);
+});
+test('低价模型未开通时停止，不自动切换到Pro或重试',async()=>{
+ const f=fixture({env:{AI_PROVIDER:'ark',ARK_API_KEY:'ark-test'},error:'ModelNotOpen'}),r=await f.call('generate',await planned(f));
+ assert.equal(r.body.job.error.code,'MODEL_NOT_ENABLED');const images=f.calls.filter(x=>x.url.includes('/images/'));
+ assert.equal(images.length,1);assert.equal(images[0].body.model,'doubao-seedream-5-0-flash-260915');
+});
+test('拆层失败仍保留先前成功生图的用量与费用估算，查询任务不会再扣费',async()=>{
+ const f=fixture({env:{AI_PROVIDER:'ark',ARK_API_KEY:'ark-test'},reply:(url,payload)=>{
+  if(url.endsWith('/responses'))return Response.json({output:[{content:[{type:'output_text',text:JSON.stringify(brief())}]}]});
+  if(payload.layer_decomposition)return Response.json({error:{code:'InvalidParameter'}},{status:400,headers:{'x-request-id':'layer-failed'}});
+  return Response.json({data:[{b64_json:png(1024,1024,false).toString('base64')}],usage:{generated_images:1}},{headers:{'x-request-id':'base-billable'}});
+ }}),input=await planned(f,{renderMode:'final'}),r=await f.call('generate',{...input,allowPaidExtraction:true});
+ assert.equal(r.body.job.status,'failed');assert.equal(r.body.job.usage.calls.length,1);assert.equal(r.body.job.usage.estimatedImageCny,0.30);
+ assert.equal(r.body.job.usage.calls[0].requestId,'base-billable');assert.ok(r.body.job.providerRequestId.includes('layer-failed'));
+ await f.call('jobs/'+input.requestId);assert.equal(f.calls.filter(x=>x.url.includes('/images/')).length,2);
+});

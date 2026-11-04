@@ -1,11 +1,15 @@
 import {inspectPNG,composeTransparentLayers} from './png.mjs';
 
-export async function generateArkImage({brief,inputs,model,prompt,request,fail}){
- const images=[...(inputs.baseImage?[inputs.baseImage]:[]),...inputs.references.map(x=>x.dataUrl)];
+export function canEditAlpha(brief,inputs){
  let directAlpha=false;
  if(brief.background==='transparent'&&inputs.baseImage&&!inputs.references.length){
   try{directAlpha=inspectPNG(Buffer.from(inputs.baseImage.split(',')[1],'base64')).transparentPixels>0;}catch{}
  }
+ return directAlpha;
+}
+export async function generateArkImage({brief,inputs,model,prompt,request,fail,allowPaidExtraction=false}){
+ const images=[...(inputs.baseImage?[inputs.baseImage]:[]),...inputs.references.map(x=>x.dataUrl)],directAlpha=canEditAlpha(brief,inputs);
+ if(brief.background==='transparent'&&!directAlpha&&!allowPaidExtraction)fail('PAID_EXTRACTION_REQUIRED','新透明图需要额外付费拆层。请先生成不透明预览；确定后选择正式输出并勾选费用说明。',422);
  const body={model,prompt,size:`${brief.size.width}x${brief.size.height}`,output_format:'png',response_format:'b64_json',watermark:false,background:directAlpha?'transparent':'opaque',...(images.length?{image:images.length===1?images[0]:images}:{})};
  if(brief.background==='transparent'&&!directAlpha)body.prompt+='\n本步骤先生成可准确分离的前景主体，主体完整、留出边距，使用简单纯色背景，不画棋盘格。下一步骤会将全部要求的前景主体合并提取为透明图层。';
  const first=await request(body),data=first.value.data?.[0]?.b64_json;
