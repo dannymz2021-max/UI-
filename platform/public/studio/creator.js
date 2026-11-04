@@ -46,10 +46,10 @@ export function mountCreator(container,{toast,onAsset,onSendToSplitter}={}){
   service=await api('status');const quota=service.lastError==='QUOTA_EXCEEDED',name=service.providerLabel||'模型服务';
   const problems={MODEL_NOT_ENABLED:'所选模型尚未开通',MODEL_ACCESS_DENIED:'模型权限待检查',INVALID_API_KEY:'模型密钥不可用'};
   const problem=problems[service.lastError];
-  q('#creator-service').innerHTML=`<i></i>${escape(name)} · ${quota?'API额度不足':problem|| (service.generationReady&&service.storageReady?'密钥已配置':'待配置')}`;
+  q('#creator-service').innerHTML=`<i></i>${escape(name)} · ${quota?'上次调用额度不足':problem|| (service.generationReady&&service.storageReady?'密钥已配置':'待配置')}`;
   q('#creator-service').classList.toggle('ready',!!service.generationReady&&!!service.storageReady&&!service.lastError);
   q('.creator-options').hidden=service.qualityControl===false;renderCost();
-  if(quota)notice(name+'账户额度或余额不足。需求已保留，补充可用额度后可以重新提交。','error');
+  if(quota)notice(name+'上次调用报告额度或余额不足；这是历史记录，不是实时余额。已充值后请确认所选模型已开通，再按需提交。查看当前状态不会调用生图模型。','info');
   else if(problem)notice(problem+'。请在服务商控制台检查当前项目和密钥权限。','error');
   else if(!service.generationReady)notice(name+'密钥尚未配置。你可以先写好需求和参考用途，内容会保留在当前浏览器。');
   else if(!service.storageReady)notice('服务正在准备任务存储，请稍后重试。');

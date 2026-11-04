@@ -98,7 +98,7 @@ window.addEventListener('message',e=>{const frame=$('#splitter-frame');if(e.orig
 async function getStatus() {
  try {const r=await fetch('/api/studio/status',{cache:'no-store',credentials:'same-origin'});const value=await r.json();if(!r.ok||!value.ok)throw new Error();service={...value,loaded:true};}
  catch {service={generationReady:false,editReady:false,uiReady:false,loaded:true,statusUnavailable:true};}
- const badge=$('.nav-item[data-view="creator"] small');if(badge){badge.textContent=service.lastError==='QUOTA_EXCEEDED'?'额度不足':service.generationReady?'AI':'待配置';badge.title=service.lastError==='QUOTA_EXCEEDED'?'API账户额度不足':service.generationReady?'模型密钥已配置':'模型服务尚未配置';}
+ const badge=$('.nav-item[data-view="creator"] small');if(badge){badge.textContent=service.lastError==='QUOTA_EXCEEDED'?'上次额度不足':service.generationReady?'AI':'待配置';badge.title=service.lastError==='QUOTA_EXCEEDED'?'上次调用报告API额度不足，不代表实时账户余额':service.generationReady?'模型密钥已配置':'模型服务尚未配置';}
  mounted.get('creator')?.refresh?.(); mounted.get('ui')?.refresh?.();return service;
 }
 async function api(path,body) {
