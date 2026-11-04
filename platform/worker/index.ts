@@ -6,7 +6,7 @@ import {handleCreator} from '../server/creator.mjs';
 const worker = {
   fetch(request: Request, env: Cloudflare.Env, ctx: ExecutionContext<{ CONNECTORS?: ConnectorBinding }>) {
     const pathname=new URL(request.url).pathname;
-    if(pathname.startsWith('/api/creator/')||pathname==='/api/studio/status')return handleCreator(request,env);
+    if(pathname.startsWith('/api/creator/')||pathname==='/api/studio/status'||pathname==='/api/studio/ui-plan')return handleCreator(request,env);
     let binding = ctx.props?.CONNECTORS;
     // Local preview emulates the same request-scoped capability. This branch and
     // the auxiliary service binding are absent from production builds.

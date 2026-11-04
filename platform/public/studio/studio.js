@@ -142,7 +142,7 @@ async function show(view) {
    const container=$('#view-'+view);
    if(view==='start')mounted.set(view,mountStudioHome(container,{onOpen:async(next,mode)=>{await show(next);if(mode)mounted.get('ui')?.selectWorkspace?.(mode);},getDraft:()=>null,getAssetCount:async()=>(await readAll('assets')).length}));
    else if(view==='creator')mounted.set(view,mountCreator(container,{toast,onAsset:saveAsset,onSendToSplitter:sendToSplitter}));
-   else if(view==='ui')mounted.set(view,mountUIStudio(container,{toast,onAsset:saveAsset,onSendToSplitter:sendToSplitter,requestAI:requestUI,getServiceStatus:()=>service}));
+   else if(view==='ui')mounted.set(view,mountUIStudio(container,{toast,onAsset:saveAsset,onSendToSplitter:sendToSplitter,requestAI:requestUI,requestCompose:async input=>(await api('/api/studio/ui-plan',input)).plan,getServiceStatus:()=>service}));
    else if(view==='system')mounted.set(view,mountDesignSystem(container,{toast,onTokensChanged:()=>mounted.get('ui')?.refresh?.(),onSyncFigma:syncFigma}));
    else if(view==='splitter'){mounted.set(view,true);$('#splitter-frame').src='/splitter/index.html?embedded=1';}
    

@@ -1,3 +1,4 @@
+import {embedFigmaAssets} from './figma-embed.js';
 /** Actual Figma main-homepage composition. All layout and imagery come from the
  * recorded source nodes; this is not the earlier free-form welcome template. */
 export const MAIN_FIGMA_PAGE_META = Object.freeze({
@@ -11,7 +12,7 @@ export const MAIN_FIGMA_PAGE_DEFAULTS = Object.freeze({
   buttonLabel:'Play Now',mode:'dark',
 });
 export const MAIN_FIGMA_PAGE_EDITABLE_FIELDS=Object.freeze(['title','subtitle','buttonLabel']);
-let pagePromise=null, embeddedPromise=null;
+let pagePromise=null;
 const escapeHTML=value=>String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 const safeJSON=value=>JSON.stringify(value).replace(/</g,'\\u003c');
 async function readText(url){const response=await fetch(url,{credentials:'same-origin'});if(!response.ok)throw new Error(`Figma 原稿资源暂时无法读取：${url.split('/').pop()}`);return response.text();}
@@ -21,16 +22,6 @@ export async function loadMainFigmaPage(){
     readText('/studio/figma-main-assets/main-manifest.json'),readText('/studio/fonts/Poppins-OFL.txt'),readText('/studio/figma-main-assets/Rowdies-OFL.txt'),
   ]).then(([body,css,raw,poppins,rowdies])=>({body,css,manifest:JSON.parse(raw),license:`POPPINS\n${poppins}\n\nROWDIES\n${rowdies}`})).catch(error=>{pagePromise=null;throw error;});
   return pagePromise;
-}
-function blobURL(blob,mime){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result));reader.onerror=()=>reject(new Error('导出图片编码失败。'));reader.readAsDataURL(new Blob([blob],{type:mime}));});}
-async function embedding(manifest){
-  if(!embeddedPromise)embeddedPromise=(async()=>{
-    const list=[...manifest.assets,...manifest.fonts.map(f=>({...f,mime:'font/ttf'}))];
-    const unique=[...new Map(list.map(x=>[x.path,x])).values()];const results=new Map();let cursor=0;
-    await Promise.all(Array.from({length:Math.min(6,unique.length)},async()=>{while(cursor<unique.length){const item=unique[cursor++];const r=await fetch(item.path,{credentials:'same-origin'});if(!r.ok)throw new Error(`无法打包原稿素材：${item.path.split('/').pop()}`);const blob=await r.blob();if(!blob.size)throw new Error('原稿素材为空，已停止导出。');results.set(item.path,await blobURL(blob,item.mime));}}));
-    return results;
-  })().catch(error=>{embeddedPromise=null;throw error;});
-  return embeddedPromise;
 }
 function editHero(body,options){
   const fields=[['title','[data-node-id="2273:603378"]',32],['subtitle','[data-node-id="2273:603389"]',80],['buttonLabel','[data-node-id="I2273:603395;269:4274"] p',20]];
@@ -46,7 +37,8 @@ function editHero(body,options){
 export async function renderMainFigmaHTML(options={}){
   const page=await loadMainFigmaPage();let body=editHero(page.body,options),css=page.css;
   const mode=options.mode==='light'?'light':'dark';
-  if(options.embedAssets){for(const [url,data]of await embedding(page.manifest)){body=body.split(url).join(data);css=css.split(url).join(data);}}
-  const meta={...MAIN_FIGMA_PAGE_META,format:'editable-html-with-original-assets',mode,assetCount:page.manifest.assets.length,variableCount:page.manifest.variableCount,desktopOnly:true,embedded:!!options.embedAssets,lightModeNote:mode==='light'?'真实变量浅色预览；原稿静态图像仍使用读取到的素材。':undefined};
+  if(options.compose)({body,css}=options.compose(body,css,page.manifest));
+  if(options.embedAssets)({body,css}=await embedFigmaAssets(page.manifest,body,css));
+  const meta={...MAIN_FIGMA_PAGE_META,format:'editable-html-with-original-assets',mode,assetCount:page.manifest.assets.length,variableCount:page.manifest.variableCount,desktopOnly:true,embedded:!!options.embedAssets,lightModeNote:mode==='light'?'真实变量浅色预览；原稿静态图像仍使用读取到的素材。':undefined,...options.compositionMeta};
   return `<!doctype html><html lang="en" data-figma-mode="${mode}"><head><meta charset="utf-8"><meta name="viewport" content="width=1600"><meta name="color-scheme" content="${mode}"><title>${escapeHTML(options.title??MAIN_FIGMA_PAGE_DEFAULTS.title)} · Megwin</title><style>${css}</style></head><body>${body}<script type="application/json" id="figma-source-manifest">${safeJSON(meta)}</script><script type="text/plain" id="figma-main-font-licenses">${page.license.replace(/</g,'\\u003c')}</script></body></html>`;
 }

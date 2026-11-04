@@ -33,3 +33,13 @@ test('credit_balance_exhausted不能误报为普通限流',async()=>{const f=fix
 test('没有真实透明像素的结果不作为透明PNG交付',async()=>{const f=fixture({image:png(1024,1024,false)}),r=await f.call('generate',await planned(f));assert.equal(r.body.job.status,'failed');assert.equal(r.body.job.error.code,'ALPHA_MISSING');assert.equal(f.objects.size,0);});
 test('24小时限制由服务端执行，客户端不能绕过',async()=>{const f=fixture();f.env.AI_DAILY_LIMIT='1';await f.call('generate',await planned(f));const r=await f.call('generate',await planned(f));assert.equal(r.status,429);assert.equal(r.body.error.code,'GENERATION_LIMIT');assert.equal(f.calls.filter(x=>x.url.includes('/images/')).length,1);});
 test('指纹包含参考用途及上版要求，防止整理与生成上下文不一致',async()=>{const i=await validateInputs({prompt:rawPrompt}),a=await fingerprint(i);i.previousRequirements={prohibitions:['不要皇冠']};assert.notEqual(a,await fingerprint(i));});
+test('UI 规划收到原始 PRD 和参考图；同用户重复请求受限，非法区块不会交给渲染器',async()=>{
+ const output={family:'activity',mode:'dark',regions:['hero','steps'],gaps:[],title:'Bienvenido',subtitle:'',buttonLabel:'Ver más'};
+ const valid=fixture({brief:output}),invalid=fixture({brief:{...output,regions:['hero','leagues']}});
+ const req=()=>new Request('https://studio.test/api/studio/ui-plan',{method:'POST',headers:{'oai-authenticated-user-id':'owner-a',origin:'https://studio.test','content-type':'application/json'},body:JSON.stringify({prompt:'仅生成活动首屏和步骤',family:'activity',mode:'dark',referenceDataUrl:'data:image/png;base64,'+png(16,16).toString('base64')})});
+ const good=await handleCreator(req(),valid.env,valid.fetcher);assert.equal(good.status,200);
+ assert.equal((await good.json()).plan.copy.title,'Bienvenido');
+ const sent=valid.calls[0].body.input[0].content;assert.ok(sent[0].text.includes('仅生成活动首屏和步骤'));assert.equal(sent[1].type,'input_image');
+ assert.equal((await handleCreator(req(),valid.env,valid.fetcher)).status,429);assert.equal(valid.calls.length,1);
+ const bad=await handleCreator(req(),invalid.env,invalid.fetcher);assert.equal(bad.status,502);assert.equal((await bad.json()).error.code,'UI_PLAN_INVALID');
+});
