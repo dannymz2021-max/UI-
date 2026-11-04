@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {providerConfig,providerPayload,validProviderSize,classifyProviderError,healthOwner} from '../server/providers.mjs';
 import {generateArkImage} from '../server/ark-image.mjs';
-import {encodeRGBA,inspectPNG,placeTransparentLayer} from '../server/png.mjs';
+import {encodeRGBA,inspectPNG,placeTransparentLayer,composeTransparentLayers} from '../server/png.mjs';
 function image(w,h,alpha=255){const pixels=Buffer.alloc(w*h*4);for(let i=0;i<pixels.length;i+=4){pixels[i]=200;pixels[i+1]=40;pixels[i+2]=90;pixels[i+3]=alpha;}return encodeRGBA(w,h,pixels);}
 const brief={background:'transparent',size:{width:1024,height:1024},subjects:['一个足球'],texts:[],preserve:[]};
 const fail=(code,message,status)=>{throw Object.assign(new Error(message),{code,status});};
@@ -33,9 +33,18 @@ test('已有透明基图只执行一次透明编辑；不会使用多图透明�
  await generateArkImage({brief,inputs:{baseImage:'data:image/png;base64,'+base.toString('base64'),references:[]},model:'m',prompt:'换色',fail,request:async b=>{calls.push(b);return {value:{data:[{b64_json:base.toString('base64')}]}};}});
  assert.equal(calls.length,1);assert.equal(calls[0].background,'transparent');assert.equal(typeof calls[0].image,'string');
 });
-test('多个主体图层、越界位置和缺失Alpha不冒充完整透明交付',async()=>{
+test('缺失图层文件和越界位置不冒充完整透明交付',async()=>{
  const full=image(1024,1024),layer=image(8,8,128);
- await assert.rejects(()=>generateArkImage({brief,inputs:{references:[]},model:'m',prompt:'x',fail,request:async b=>b.layer_decomposition?{value:{data:[{z_index:0,size:'1024x1024'},{z_index:1},{z_index:2}]}}:{value:{data:[{b64_json:full.toString('base64')}]}}}),e=>e.code==='LAYER_REVIEW_REQUIRED');
+ await assert.rejects(()=>generateArkImage({brief,inputs:{references:[]},model:'m',prompt:'x',fail,request:async b=>b.layer_decomposition?{value:{data:[{z_index:0,size:'1024x1024'},{z_index:1},{z_index:2}]}}:{value:{data:[{b64_json:full.toString('base64')}]}}}),e=>e.code==='LAYER_EXTRACTION_FAILED');
  assert.throws(()=>placeTransparentLayer(layer,32,32,[20,20,60,60]),/位置/);
  assert.throws(()=>placeTransparentLayer(layer,32,32,[0,0,32,4]),/比例/);
+});
+test('多个前景按照z顺序和原位置合成；重叠部分执行Alpha叠加并保留两侧主体',()=>{
+ const red=Buffer.from([255,0,0,128]),blue=Buffer.from([0,0,255,128]);
+ const r=composeTransparentLayers([{bytes:encodeRGBA(1,1,blue),box:[1,0,3,2],zIndex:2},{bytes:encodeRGBA(1,1,red),box:[0,0,2,2],zIndex:1}],4,4);
+ const p=inspectPNG(r,true).pixels;
+ assert.deepEqual([...p.subarray(0,4)],[255,0,0,128]);
+ assert.ok(p[4+2]>p[4]);assert.ok(p[4+3]>128&&p[4+3]<255);
+ assert.deepEqual([...p.subarray((3*4+3)*4,(3*4+3)*4+4)],[0,0,0,0]);
+ assert.throws(()=>composeTransparentLayers([{bytes:r,box:[0,0,4,4],zIndex:1},{bytes:r,box:[0,0,4,4],zIndex:1}],4,4),/顺序/);
 });

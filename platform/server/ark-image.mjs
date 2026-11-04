@@ -1,4 +1,4 @@
-import {inspectPNG,placeTransparentLayer} from './png.mjs';
+import {inspectPNG,composeTransparentLayers} from './png.mjs';
 
 export async function generateArkImage({brief,inputs,model,prompt,request,fail}){
  const images=[...(inputs.baseImage?[inputs.baseImage]:[]),...inputs.references.map(x=>x.dataUrl)];
@@ -19,8 +19,9 @@ export async function generateArkImage({brief,inputs,model,prompt,request,fail})
  if(!Array.isArray(items)||items.some(x=>x.error))fail('LAYER_EXTRACTION_FAILED','透明主体提取未完整完成，没有交付不完整的图。',502);
  const base=items.find(x=>x.z_index===0),layers=items.filter(x=>Number.isInteger(x.z_index)&&x.z_index>0);
  if(base?.size!==`${brief.size.width}x${brief.size.height}`)fail('LAYER_SIZE_MISMATCH','透明图层的底图尺寸不一致，已停止交付。',502);
- if(layers.length!==1)fail('LAYER_REVIEW_REQUIRED','透明主体被拆为多个图层，暂不能确认主体完整性。这次未作为最终透明图交付。',422);
- const layer=layers[0];if(typeof layer.b64_json!=='string'||layer.b64_json.length>20000000)fail('LAYER_EXTRACTION_FAILED','透明主体文件未完整返回。',502);
- try{bytes=placeTransparentLayer(Buffer.from(layer.b64_json,'base64'),brief.size.width,brief.size.height,layer.bounding_box?.absolute);}catch{fail('LAYER_GEOMETRY_INVALID','透明图层的位置、比例或编码未通过验证，已停止交付。',502);}
- return {bytes,requestId:requestIds.join(' / '),pipeline:'ark-image-then-subject-layer',usage:{generation:first.value.usage,extraction:second.value.usage},layer:{name:layer.name||'',description:layer.description||'',boundingBox:layer.bounding_box.absolute}};
+ if(!layers.length||layers.length>16)fail('LAYER_EXTRACTION_FAILED','没有取得完整的透明前景图层。',502);
+ if(items.length!==layers.length+1)fail('LAYER_EXTRACTION_FAILED','图层清单不完整，已停止交付。',502);
+ if(layers.some(layer=>typeof layer.b64_json!=='string'||layer.b64_json.length>20000000))fail('LAYER_EXTRACTION_FAILED','透明主体文件未完整返回。',502);
+ try{bytes=composeTransparentLayers(layers.map(layer=>({bytes:Buffer.from(layer.b64_json,'base64'),box:layer.bounding_box?.absolute,zIndex:layer.z_index})),brief.size.width,brief.size.height);}catch{fail('LAYER_GEOMETRY_INVALID','透明图层的位置、比例或编码未通过验证，已停止交付。',502);}
+ return {bytes,requestId:requestIds.join(' / '),pipeline:'ark-image-then-subject-layer',usage:{generation:first.value.usage,extraction:second.value.usage},layer:{count:layers.length,parts:layers.map(layer=>({name:layer.name||'',description:layer.description||'',zIndex:layer.z_index,boundingBox:layer.bounding_box.absolute}))}};
 }

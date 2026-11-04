@@ -27,17 +27,29 @@ export function encodeRGBA(width,height,pixels){
 /** Reconstruct one subject layer using the provider's absolute bounding box.
  * Premultiplied-alpha interpolation preserves translucent edges without a solid matte. */
 export function placeTransparentLayer(layerBytes,width,height,box){
+ return composeTransparentLayers([{bytes:layerBytes,box,zIndex:1}],width,height);
+}
+function blendTransparentLayer(target,layerBytes,width,height,box){
  const source=inspectPNG(layerBytes,true);
  if(!source.hasAlpha||!Array.isArray(box)||box.length!==4||box.some(x=>!Number.isInteger(x)))throw Error('图层缺少透明通道或位置。');
  const [left,top,right,bottom]=box,w=right-left,h=bottom-top;
  if(left<0||top<0||right>width||bottom>height||w<1||h<1||Math.abs((source.width/source.height)/(w/h)-1)>.05)throw Error('图层位置或比例不匹配。');
- const target=Buffer.alloc(width*height*4),p=source.pixels;
+ const p=source.pixels;
  for(let y=0;y<h;y++)for(let x=0;x<w;x++){
   const sx=Math.max(0,Math.min(source.width-1,(x+.5)*source.width/w-.5)),sy=Math.max(0,Math.min(source.height-1,(y+.5)*source.height/h-.5));
   const x0=Math.floor(sx),y0=Math.floor(sy),x1=Math.min(x0+1,source.width-1),y1=Math.min(y0+1,source.height-1),fx=sx-x0,fy=sy-y0;
   const weights=[(1-fx)*(1-fy),fx*(1-fy),(1-fx)*fy,fx*fy],ids=[(y0*source.width+x0)*4,(y0*source.width+x1)*4,(y1*source.width+x0)*4,(y1*source.width+x1)*4];
   let alpha=0;const colors=[0,0,0];for(let i=0;i<4;i++){const weight=weights[i]*p[ids[i]+3];alpha+=weight;for(let c=0;c<3;c++)colors[c]+=weight*p[ids[i]+c];}
-  const d=((top+y)*width+left+x)*4;target[d+3]=Math.round(alpha);if(alpha)for(let c=0;c<3;c++)target[d+c]=Math.round(colors[c]/alpha);
+  const d=((top+y)*width+left+x)*4,backAlpha=target[d+3],remaining=1-alpha/255,outAlpha=alpha+backAlpha*remaining;
+  if(outAlpha)for(let c=0;c<3;c++)target[d+c]=Math.round((colors[c]+target[d+c]*backAlpha*remaining)/outAlpha);
+  target[d+3]=Math.round(outAlpha);
  }
+}
+export function composeTransparentLayers(layers,width,height){
+ if(!Number.isInteger(width)||!Number.isInteger(height)||width<1||height<1||width*height>8294400||!Array.isArray(layers)||layers.length<1||layers.length>16)throw Error('透明图层或画布数量无效。');
+ const order=layers.map(x=>x.zIndex);
+ if(order.some(z=>!Number.isInteger(z)||z<1)||new Set(order).size!==order.length)throw Error('图层叠放顺序无效。');
+ const target=Buffer.alloc(width*height*4);
+ for(const layer of layers.slice().sort((a,b)=>a.zIndex-b.zIndex))blendTransparentLayer(target,layer.bytes,width,height,layer.box);
  return encodeRGBA(width,height,target);
 }

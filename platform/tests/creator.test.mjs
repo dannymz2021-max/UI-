@@ -30,6 +30,13 @@ test('重复提交同一任务不会再次调用收费模型',async()=>{const f=
 test('理解后修改参考图或原始文字必须重新整理',async()=>{const f=fixture(),body=await planned(f);assert.equal((await f.call('generate',{...body,prompt:'新的需求'})).body.error.code,'PROMPT_CHANGED');const other=await planned(f);assert.equal((await f.call('generate',{...other,references:[{dataUrl:'data:image/png;base64,'+png(16,16).toString('base64'),role:'style'}]})).body.error.code,'REFERENCE_CHANGED');assert.equal(f.calls.filter(x=>x.url.includes('/images/')).length,0);});
 test('额度不足准确回传，不自动重试，也不覆盖原作品',async()=>{const f=fixture({error:'insufficient_quota'}),body=await planned(f),r=await f.call('generate',body);assert.equal(r.body.job.status,'failed');assert.equal(r.body.job.error.code,'QUOTA_EXCEEDED');assert.equal(f.objects.size,0);assert.equal(f.calls.filter(x=>x.url.includes('/images/')).length,1);});
 test('credit_balance_exhausted不能误报为普通限流',async()=>{const f=fixture({error:'credit_balance_exhausted'}),r=await f.call('generate',await planned(f));assert.equal(r.body.job.error.code,'QUOTA_EXCEEDED');assert.equal(f.calls.filter(x=>x.url.includes('/images/')).length,1);});
+test('生图欠费状态会保留，文字理解成功不会把生图错误清空',async()=>{
+ const f=fixture({error:'AccountOverdueError',env:{AI_PROVIDER:'ark',ARK_API_KEY:'ark-test'}});
+ await f.call('generate',await planned(f));
+ assert.equal((await f.call('status')).body.lastError,'QUOTA_EXCEEDED');
+ await planned(f);
+ assert.equal((await f.call('status')).body.lastError,'QUOTA_EXCEEDED');
+});
 test('没有真实透明像素的结果不作为透明PNG交付',async()=>{const f=fixture({image:png(1024,1024,false)}),r=await f.call('generate',await planned(f));assert.equal(r.body.job.status,'failed');assert.equal(r.body.job.error.code,'ALPHA_MISSING');assert.equal(f.objects.size,0);});
 test('24小时限制由服务端执行，客户端不能绕过',async()=>{const f=fixture();f.env.AI_DAILY_LIMIT='1';await f.call('generate',await planned(f));const r=await f.call('generate',await planned(f));assert.equal(r.status,429);assert.equal(r.body.error.code,'GENERATION_LIMIT');assert.equal(f.calls.filter(x=>x.url.includes('/images/')).length,1);});
 test('指纹包含参考用途及上版要求，防止整理与生成上下文不一致',async()=>{const i=await validateInputs({prompt:rawPrompt}),a=await fingerprint(i);i.previousRequirements={prohibitions:['不要皇冠']};assert.notEqual(a,await fingerprint(i));});
