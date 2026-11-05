@@ -1,4 +1,5 @@
 import {UI_SOURCE_BLOCKS} from './ui-source-library.js';
+import {uiChildren} from './ui-component-library.js';
 import {loadMainFigmaPage,renderMainFigmaHTML} from './figma-main-page.js';
 import {loadFigmaPage,renderFigmaHTML} from './figma-page.js';
 export const moduleKey=n=>JSON.stringify([n.family,n.block,n.title,n.subtitle,n.buttonLabel]);
@@ -18,6 +19,6 @@ export async function prepareSourceModules(plan){const modules=new Map();
    css+=`\nhtml,body{margin:0!important;padding:0!important;min-height:0!important;width:${meta.width}px!important;height:${meta.height}px!important;overflow:hidden!important} ${main?'.figma-main-artboard':'.figma-artboard'}{position:relative!important;margin:0!important;padding:0!important;width:${meta.width}px!important;height:${meta.height}px!important;min-height:0!important;overflow:hidden!important}`;
    return {body:doc.body.innerHTML,css};};
   const html=await render(options);modules.set(key,{...meta,family:n.family,block:n.block,mode:plan.mode,dataUrl:'data:text/html;base64,'+toBase64(html),capturedAt:page.manifest.capturedAt,copy:Object.fromEntries(['title','subtitle','buttonLabel'].filter(k=>n[k]!==undefined).map(k=>[k,n[k]]))});
- }for(const child of n.children||[])await visit(child);}
+ }for(const child of uiChildren(n))await visit(child);}
  await visit(plan.root);return modules;
 }

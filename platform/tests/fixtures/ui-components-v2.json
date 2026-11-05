@@ -1,0 +1,423 @@
+{
+  "format": "megwin-ui-v2",
+  "title": "Configuración de cuenta",
+  "summary": "完整账户设置原型，按用户设计系统组合导航、表单、状态、数据列表和帮助。",
+  "mode": "dark",
+  "width": 1440,
+  "questions": [],
+  "gaps": [],
+  "coverage": [
+    {
+      "requirement": "账户资料、偏好和通知设置",
+      "targets": [
+        "profile-panel",
+        "notice-panel"
+      ]
+    },
+    {
+      "requirement": "可筛选、排序并分页的记录",
+      "targets": [
+        "records-table",
+        "records-search",
+        "records-pages"
+      ]
+    }
+  ],
+  "root": {
+    "type": "workspace",
+    "header": [
+      {
+        "type": "navbar",
+        "key": "header",
+        "items": [
+          {
+            "label": "Mi cuenta",
+            "target": "profile-panel"
+          },
+          {
+            "label": "Historial",
+            "target": "records-table"
+          }
+        ],
+        "accountLabel": "usuario001",
+        "topLabel": "Centro de cuenta",
+        "language": "Español"
+      }
+    ],
+    "sidebar": [
+      {
+        "type": "navigation",
+        "key": "side-nav",
+        "label": "Navegación de cuenta",
+        "items": [
+          {
+            "label": "Mi perfil",
+            "icon": "user",
+            "target": "profile-panel"
+          },
+          {
+            "label": "Historial",
+            "icon": "history",
+            "target": "records-table"
+          },
+          {
+            "label": "Eventos",
+            "icon": "in-play",
+            "target": "empty-events"
+          }
+        ]
+      }
+    ],
+    "children": [
+      {
+        "type": "text",
+        "text": "Configuración de cuenta",
+        "textStyle": "Headline/sm"
+      },
+      {
+        "type": "alert",
+        "key": "saved-note",
+        "tone": "info",
+        "title": "Tu cuenta, a tu manera",
+        "text": "Administra tus datos y preferencias."
+      },
+      {
+        "type": "tabs",
+        "key": "account-tabs",
+        "items": [
+          {
+            "label": "Perfil",
+            "children": [
+              {
+                "type": "grid",
+                "columns": 2,
+                "gap": "lg",
+                "children": [
+                  {
+                    "type": "panel",
+                    "key": "profile-panel",
+                    "title": "Datos personales",
+                    "open": true,
+                    "children": [
+                      {
+                        "type": "form",
+                        "key": "profile-form",
+                        "children": [
+                          {
+                            "type": "input",
+                            "key": "name-field",
+                            "label": "Nombre",
+                            "value": "Ana",
+                            "required": true
+                          },
+                          {
+                            "type": "input",
+                            "key": "email-field",
+                            "label": "Correo electrónico",
+                            "inputType": "email",
+                            "value": "ana@ejemplo.com",
+                            "required": true
+                          },
+                          {
+                            "type": "select",
+                            "key": "country-field",
+                            "label": "País",
+                            "options": [
+                              "México",
+                              "Brasil",
+                              "España"
+                            ],
+                            "value": "México"
+                          },
+                          {
+                            "type": "text",
+                            "text": "Idioma de comunicación",
+                            "textStyle": "Body/md"
+                          },
+                          {
+                            "type": "radio",
+                            "key": "language-es",
+                            "group": "language",
+                            "value": "es",
+                            "label": "Español",
+                            "checked": true
+                          },
+                          {
+                            "type": "radio",
+                            "key": "language-en",
+                            "group": "language",
+                            "value": "en",
+                            "label": "English"
+                          },
+                          {
+                            "type": "checkbox",
+                            "key": "terms",
+                            "label": "He revisado mis datos",
+                            "checked": false
+                          },
+                          {
+                            "type": "caption",
+                            "key": "field-hint",
+                            "tone": "info",
+                            "text": "Puedes actualizar tu información en cualquier momento."
+                          },
+                          {
+                            "type": "button",
+                            "text": "Guardar cambios",
+                            "action": "open-dialog",
+                            "target": "confirm-dialog"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "panel",
+                    "key": "notice-panel",
+                    "title": "Preferencias",
+                    "open": true,
+                    "children": [
+                      {
+                        "type": "switch",
+                        "key": "email-switch",
+                        "label": "Notificaciones por correo",
+                        "checked": true
+                      },
+                      {
+                        "type": "switch",
+                        "key": "sms-switch",
+                        "label": "Notificaciones SMS",
+                        "checked": false
+                      },
+                      {
+                        "type": "progress",
+                        "key": "profile-progress",
+                        "label": "Perfil completado · 65%",
+                        "value": 65,
+                        "max": 100
+                      },
+                      {
+                        "type": "badge",
+                        "key": "verified-badge",
+                        "tone": "success",
+                        "text": "Verificado"
+                      },
+                      {
+                        "type": "button",
+                        "text": "Restablecer",
+                        "action": "none"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "accordion",
+                "key": "help",
+                "title": "¿Cómo cambio mis datos?",
+                "open": false,
+                "children": [
+                  {
+                    "type": "text",
+                    "text": "Actualiza los campos y revisa los cambios antes de guardarlos.",
+                    "textStyle": "Body/sm"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Historial",
+            "children": [
+              {
+                "type": "input",
+                "key": "records-search",
+                "inputType": "search",
+                "label": "Buscar registro",
+                "placeholder": "Buscar por descripción",
+                "filterTarget": "records-table"
+              },
+              {
+                "type": "select",
+                "key": "record-status",
+                "label": "Estado",
+                "options": [
+                  {
+                    "label": "Todos",
+                    "value": ""
+                  },
+                  "Completado",
+                  "Pendiente"
+                ],
+                "value": "",
+                "filterTarget": "records-table",
+                "filterColumn": 2
+              },
+              {
+                "type": "table",
+                "key": "records-table",
+                "title": "Historial de actividad",
+                "columns": [
+                  "ID",
+                  "Descripción",
+                  "Estado"
+                ],
+                "rows": [
+                  [
+                    "1",
+                    "Actualización 1",
+                    {
+                      "type": "badge",
+                      "tone": "success",
+                      "text": "Completado"
+                    }
+                  ],
+                  [
+                    "2",
+                    "Actualización 2",
+                    {
+                      "type": "badge",
+                      "tone": "pending",
+                      "text": "Pendiente"
+                    }
+                  ],
+                  [
+                    "3",
+                    "Actualización 3",
+                    {
+                      "type": "badge",
+                      "tone": "success",
+                      "text": "Completado"
+                    }
+                  ],
+                  [
+                    "4",
+                    "Actualización 4",
+                    {
+                      "type": "badge",
+                      "tone": "pending",
+                      "text": "Pendiente"
+                    }
+                  ],
+                  [
+                    "5",
+                    "Actualización 5",
+                    {
+                      "type": "badge",
+                      "tone": "success",
+                      "text": "Completado"
+                    }
+                  ],
+                  [
+                    "6",
+                    "Actualización 6",
+                    {
+                      "type": "badge",
+                      "tone": "pending",
+                      "text": "Pendiente"
+                    }
+                  ],
+                  [
+                    "7",
+                    "Actualización 7",
+                    {
+                      "type": "badge",
+                      "tone": "success",
+                      "text": "Completado"
+                    }
+                  ],
+                  [
+                    "8",
+                    "Actualización 8",
+                    {
+                      "type": "badge",
+                      "tone": "pending",
+                      "text": "Pendiente"
+                    }
+                  ],
+                  [
+                    "9",
+                    "Actualización 9",
+                    {
+                      "type": "badge",
+                      "tone": "success",
+                      "text": "Completado"
+                    }
+                  ],
+                  [
+                    "10",
+                    "Actualización 10",
+                    {
+                      "type": "badge",
+                      "tone": "pending",
+                      "text": "Pendiente"
+                    }
+                  ],
+                  [
+                    "11",
+                    "Actualización 11",
+                    {
+                      "type": "badge",
+                      "tone": "success",
+                      "text": "Completado"
+                    }
+                  ],
+                  [
+                    "12",
+                    "Actualización 12",
+                    {
+                      "type": "badge",
+                      "tone": "pending",
+                      "text": "Pendiente"
+                    }
+                  ]
+                ],
+                "pageSize": 5,
+                "sortable": true,
+                "highlightRow": -1
+              },
+              {
+                "type": "pagination",
+                "key": "records-pages",
+                "tableKey": "records-table",
+                "current": 1
+              }
+            ]
+          },
+          {
+            "label": "Eventos",
+            "children": [
+              {
+                "type": "empty",
+                "key": "empty-events",
+                "title": "No hay eventos disponibles",
+                "text": "Vuelve a consultar más tarde."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "dialog",
+        "key": "confirm-dialog",
+        "title": "Confirmar cambios",
+        "text": "Revisa la información antes de continuar.",
+        "tone": "warning",
+        "open": false,
+        "children": [
+          {
+            "type": "button",
+            "text": "Confirmar",
+            "action": "close-dialog"
+          },
+          {
+            "type": "button",
+            "text": "Cancelar",
+            "action": "close-dialog",
+            "variant": "outlined"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,4 +1,5 @@
 import {ownsMessages} from './message-scope.mjs';
+import {ownsUIPlanMessages,uiPlanCorrection,reviewDesktopUIPlan} from './ui-planner.mjs';
 import {imageRequirements} from './image-review.mjs';
 // Only public, rendered controls in the user's explicitly connected desktop app.
 // No cookies, account tokens, React state, private RPCs, or payment controls.
@@ -10,9 +11,9 @@ const pause=ms=>new Promise(r=>setTimeout(r,ms));
 const hash=s=>createHash('sha256').update(s).digest('hex');
 export const canonicalText=s=>s.replace(/\r\n/g,'\n').replace(/\n+/g,'\n').trim();
 const visible=`e=>e.getClientRects().length&&e.getBoundingClientRect().width>0&&!e.closest('[aria-hidden="true"]')&&getComputedStyle(e).visibility!=='hidden'`;
-const panelState=`(()=>{const p=document.querySelector('[data-testid="chat_input"]');if(!p)return null;const editors=[...p.querySelectorAll('textarea,[contenteditable="true"]')].filter(${visible});return {panel:p.innerText,editorCount:editors.length,draft:editors.map(e=>e.value||e.innerText||'').join(''),attachments:[...p.querySelectorAll('img')].filter(i=>i.naturalWidth>80&&i.getClientRects().length).length,busy:!!document.querySelector('[data-testid="chat_input_stop_button"]')}})()`;
+const panelState=`(()=>{const p=document.querySelector('[data-testid="chat_input"]');if(!p)return null;const editors=[...p.querySelectorAll('textarea,[contenteditable="true"]')].filter(${visible});return {visibility:document.visibilityState,panel:p.innerText,editorCount:editors.length,draft:editors.map(e=>e.value||e.innerText||'').join(''),attachments:[...p.querySelectorAll('img')].filter(i=>i.naturalWidth>80&&i.getClientRects().length).length,busy:!!document.querySelector('[data-testid="chat_input_stop_button"]')}})()`;
 async function imageReady(page){for(let n=0;n<30;n++){const s=await page.dom(panelState);if(s?.panel.includes('Seedream'))return s;await pause(300);}throw Error('豆包图像模式尚未加载完成，请稍后再试。');}
-export async function health(){let page;try{page=await desktopPage();const state=await page.dom(panelState);return {connected:!!state,model:'Seedream 4.5',mode:'desktop',textOnly:false,uiPlanning:true};}catch{return {connected:false,model:'Seedream 4.5',mode:'desktop',textOnly:false,uiPlanning:true};}finally{page?.close();}}
+export async function health(){let page;try{page=await desktopPage();const state=await page.dom(panelState);return {connected:!!state&&state.visibility==='visible',model:'Seedream 4.5',mode:'desktop',textOnly:false,uiPlanning:true};}catch{return {connected:false,model:'Seedream 4.5',mode:'desktop',textOnly:false,uiPlanning:true};}finally{page?.close();}}
 async function click(page,selector,beforeClick){let point;for(let attempt=0;attempt<24;attempt++){point=await page.dom(`(()=>{let es=[...document.querySelectorAll(${JSON.stringify(selector)})].filter(${visible});if(es.length>1&&${JSON.stringify(selector)}==='[data-testid="create_conversation_button"]')es=es.filter(e=>e.innerText.includes('新对话'));if(es.length!==1)return null;const e=es[0];if(e.disabled||e.getAttribute('aria-disabled')==='true')return null;const r=e.getBoundingClientRect();return{x:r.x+r.width/2,y:r.y+r.height/2}})()`);if(point)break;await pause(250);}if(!point)throw Error('豆包操作入口还未就绪，请保持主窗口可见后重试；本次没有点击发送。');await beforeClick?.();await page.call('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,...point});await page.call('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,...point});}
 async function chooseDailyModel(page){
  let s=await imageReady(page);if(!s?.panel.includes('Seedream 4.5')){
@@ -40,11 +41,24 @@ export async function clearPreparedDraft(page,prompt){
  await page.call('Input.dispatchKeyEvent',{type:'keyDown',key:'a',code:'KeyA',windowsVirtualKeyCode:65,modifiers:2});await page.call('Input.dispatchKeyEvent',{type:'keyUp',key:'a',code:'KeyA',windowsVirtualKeyCode:65,modifiers:2});
  await page.call('Input.dispatchKeyEvent',{type:'keyDown',key:'Backspace',code:'Backspace',windowsVirtualKeyCode:8});await page.call('Input.dispatchKeyEvent',{type:'keyUp',key:'Backspace',code:'Backspace',windowsVirtualKeyCode:8});return true;
 }
+async function typePrompt(page,prompt){
+ const paragraphs=prompt.split('\n');for(let i=0;i<paragraphs.length;i++){if(paragraphs[i])await page.call('Input.insertText',{text:paragraphs[i]});if(i<paragraphs.length-1){await page.call('Input.dispatchKeyEvent',{type:'keyDown',key:'Enter',code:'Enter',windowsVirtualKeyCode:13,modifiers:8,text:'\r'});await page.call('Input.dispatchKeyEvent',{type:'keyUp',key:'Enter',code:'Enter',windowsVirtualKeyCode:13,modifiers:8});}await pause(30);}await pause(600);
+}
+async function correctUIPlan(page,job,save,error){
+ const state=await page.dom(panelState);if(state?.visibility!=='visible'||state.editorCount!==1||state.draft.trim()||state.attachments||state.busy||!state.panel.includes('快速')||state.panel.includes('Seedream'))throw Error('方案需要修正，但豆包输入区或免费模式未就绪；保留任务，未发送修正。');
+ const correction={prompt:uiPlanCorrection(error,(job.corrections?.length||0)+1),submitAttempted:false};
+ try{
+  await page.dom(`(()=>{const p=document.querySelector('[data-testid="chat_input"]');const es=[...p.querySelectorAll('textarea,[contenteditable="true"]')].filter(${visible});if(es.length!==1)throw Error('修正输入区不唯一。');es[0].focus();return true})()`);await typePrompt(page,correction.prompt);
+  const verified=await page.dom(`(()=>{const p=document.querySelector('[data-testid="chat_input"]');const e=[...p.querySelectorAll('textarea,[contenteditable="true"]')].filter(${visible})[0];const norm=${canonicalText.toString()};return norm(e?.value??e?.innerText??'')===norm(${JSON.stringify(correction.prompt)})&&p.innerText.includes('快速')})()`);if(!verified)throw Error('修正内容或免费模式发生变化。');
+  await click(page,'[data-testid="chat_input_send_button"]',async()=>{correction.submitAttempted=true;correction.submittedAt=Date.now();job.corrections??=[];job.corrections.push(correction);await save(job);});await pause(1000);
+ }catch(e){if(!correction.submitAttempted)await clearPreparedDraft(page,correction.prompt).catch(()=>{});throw e;}
+}
 export async function execute(job,save){
  const page=await desktopPage();try{
+  await page.call('Page.bringToFront');
   if(!job.submitAttempted){
    await page.call('Input.dispatchKeyEvent',{type:'keyDown',key:'Escape',code:'Escape',windowsVirtualKeyCode:27});await page.call('Input.dispatchKeyEvent',{type:'keyUp',key:'Escape',code:'Escape',windowsVirtualKeyCode:27});
-   const state=await page.dom(panelState);if(!state||state.editorCount!==1)throw Error('请打开并登录豆包桌面端，保持主窗口可见。');if(state.draft.trim()||state.attachments)throw Error('豆包有未发送的草稿或图片，请先保存或处理；连接器没有覆盖它。');if(state.busy)throw Error('豆包正在处理其他任务，请完成后再试。');
+   const state=await page.dom(panelState);if(!state||state.visibility!=='visible'||state.editorCount!==1)throw Error('请打开并登录豆包桌面端，保持主窗口可见。');if(state.draft.trim()||state.attachments)throw Error('豆包有未发送的草稿或图片，请先保存或处理；连接器没有覆盖它。');if(state.busy)throw Error('豆包正在处理其他任务，请完成后再试。');
    await page.call('Input.dispatchKeyEvent',{type:'keyDown',key:'Escape',code:'Escape',windowsVirtualKeyCode:27});await page.call('Input.dispatchKeyEvent',{type:'keyUp',key:'Escape',code:'Escape',windowsVirtualKeyCode:27});
    await click(page,'[data-testid="create_conversation_button"]');await pause(700);
    let s=await page.dom(panelState);if(s?.draft.trim())throw Error('新对话内有草稿，已停止。');
@@ -53,18 +67,18 @@ export async function execute(job,save){
    await uploadFiles(page,job.files);
    job.baselineHashes=(await page.dom(`[...document.images].map(i=>i.currentSrc||i.src).filter(Boolean)`)).map(hash);
    await page.dom(`(()=>{const p=document.querySelector('[data-testid="chat_input"]');const es=[...p.querySelectorAll('textarea,[contenteditable="true"]')].filter(${visible});if(es.length!==1||(es[0].value||es[0].innerText||'').trim())throw Error('输入区已有内容，已停止。');es[0].focus();return true})()`);
-   await page.call('Input.insertText',{text:job.sentPrompt});
+   await typePrompt(page,job.sentPrompt);
    await page.dom(`(()=>{const p=document.querySelector('[data-testid="chat_input"]');const e=[...p.querySelectorAll('textarea,[contenteditable="true"]')].filter(${visible})[0];const norm=${canonicalText.toString()};if(norm(e?.value??e?.innerText??'')!==norm(${JSON.stringify(job.sentPrompt)})||!p.innerText.includes(${JSON.stringify(job.kind==='ui-plan'?'快速':'Seedream 4.5')}))throw Error('发送内容或免费模式发生变化，已停止。');return true})()`);
    // Durable write BEFORE the only send attempt. Restart/retry never sends again.
    await click(page,'[data-testid="chat_input_send_button"]',async()=>{job.submitAttempted=true;job.status='running';job.submittedAt=Date.now();await save(job);});await pause(1000);
    const location=await page.dom('location.href');job.conversation=location;await save(job);
   }
-  const deadline=Date.now()+240000;let lastUIHash=null,routeSettling=0;
+  const deadline=Date.now()+240000;let lastUIHash=null,lastReplyHash=null,stableInvalidReplies=0,routeSettling=0;
   while(Date.now()<deadline){
-   const observation=await page.dom(String.raw`(()=>{const messages=[...document.querySelectorAll('[data-testid="send_message"]')];const norm=s=>s.replace(/\s/g,'');const own=(${ownsMessages.toString()})(messages.map(e=>e.innerText),${JSON.stringify(job.sentPrompt)},${job.files?.length||0});const p=document.querySelector('[data-testid="chat_input"]');return {location:location.href,own,reply:own?[...document.querySelectorAll('[data-testid="receive_message"] [data-testid="message_text_content"]')].map(e=>e.innerText).join('\n'):'',images:own?[...document.querySelectorAll('[data-testid="receive_message"] [data-testid="message_image_content"] img')].map(i=>({src:i.currentSrc||i.src,w:i.naturalWidth,h:i.naturalHeight,loaded:i.complete})).filter(i=>i.loaded&&i.w>=512&&i.h>=512&&/^https:\/\/p\d+-flow-imagex-sign\.byteimg\.com\//.test(i.src)):[],blocked:[...document.querySelectorAll('[role="dialog"]')].filter(${visible}).map(e=>e.innerText).some(t=>/付费|支付|额度不足|次数已用完|升级套餐|开通会员/.test(t)),busy:p?.innerText.includes('停止生成')||false}})()`);
+   const observation=await page.dom(String.raw`(()=>{const messages=[...document.querySelectorAll('[data-testid="send_message"]')];const norm=s=>s.replace(/\s/g,'');const own=${job.kind==='ui-plan'?'('+ownsUIPlanMessages.toString()+')(messages.map(e=>e.innerText),'+JSON.stringify(job.sentPrompt)+','+JSON.stringify(job.corrections||[])+','+(job.files?.length||0)+')':'('+ownsMessages.toString()+')(messages.map(e=>e.innerText),'+JSON.stringify(job.sentPrompt)+','+(job.files?.length||0)+')'};const p=document.querySelector('[data-testid="chat_input"]'),lastReply=[...document.querySelectorAll('[data-testid="receive_message"]')].at(-1),codeBlocks=[...(lastReply?.querySelectorAll('pre code')||[])];return {location:location.href,own,replyCompleted:!!lastReply?.querySelector('[data-testid="message_action_bar"]')&&!!lastReply?.querySelector('time'),reply:own&&codeBlocks.length===1?codeBlocks[0].textContent:own?[...(document.querySelectorAll('[data-testid="receive_message"]')?.[document.querySelectorAll('[data-testid="receive_message"]').length-1]?.querySelectorAll('[data-testid="message_text_content"]')||[])].map(e=>e.innerText).join('\n'):'',images:own?[...document.querySelectorAll('[data-testid="receive_message"] [data-testid="message_image_content"] img')].map(i=>({src:i.currentSrc||i.src,w:i.naturalWidth,h:i.naturalHeight,loaded:i.complete})).filter(i=>i.loaded&&i.w>=512&&i.h>=512&&/^https:\/\/p\d+-flow-imagex-sign\.byteimg\.com\//.test(i.src)):[],blocked:[...document.querySelectorAll('[role="dialog"]')].filter(${visible}).map(e=>e.innerText).some(t=>/付费|支付|额度不足|次数已用完|升级套餐|开通会员/.test(t)),busy:!!document.querySelector('[data-testid="chat_input_stop_button"]')||p?.innerText.includes('停止生成')||false}})()`);
    if(job.conversation&&observation.location!==job.conversation){const old=new URL(job.conversation),now=new URL(observation.location),promotion=old.protocol===now.protocol&&old.origin===now.origin&&old.host===now.host&&/^\/chat\/local_\d+$/.test(old.pathname)&&/^\/chat\/\d+$/.test(now.pathname);if(promotion&&observation.own){job.conversation=observation.location;await save(job);}else if(promotion&&routeSettling++<12){await pause(600);continue;}else throw Error('豆包对话已切换；保留原任务，不重新发送。请回到本次对话后检查任务。');}
    if(observation.blocked)throw Error('豆包提示额度或套餐限制，已停止；请在客户端查看免费额度，不会购买或调用付费 API。');
-   if(job.kind==='ui-plan'){try{const plan=extractUIJSON(observation.reply),currentHash=hash(JSON.stringify(plan));if(lastUIHash===currentHash&&!observation.busy){job.status='succeeded';job.completedAt=Date.now();return {plan};}lastUIHash=currentHash;}catch{}await pause(1800);continue;}
+   if(job.kind==='ui-plan'){try{const plan=reviewDesktopUIPlan(job,observation.reply),currentHash=hash(JSON.stringify(plan));if(lastUIHash===currentHash&&observation.replyCompleted&&!observation.busy){job.status='succeeded';job.completedAt=Date.now();return {plan};}lastUIHash=currentHash;}catch(e){const replyHash=hash(observation.reply);stableInvalidReplies=lastReplyHash===replyHash?stableInvalidReplies+1:0;if(observation.own&&observation.replyCompleted&&observation.reply.length>20&&!observation.busy&&stableInvalidReplies>=3){if((job.corrections?.length||0)>=2)throw Error('豆包方案连续两次修正后仍未通过组件规范校验：'+e.message+'；已保留原任务和现有页面，不会自动重新生成。');await correctUIPlan(page,job,save,e.message);lastReplyHash=null;stableInvalidReplies=0;}else lastReplyHash=replyHash;}await pause(1800);continue;}
    const images=[...new Map(observation.images.filter(i=>!job.baselineHashes.includes(hash(i.src))).map(i=>[i.src,i])).values()];
    if(images.length){
     if(images.length!==1)throw Error('豆包返回多张图片，无法唯一对应结果；请先在客户端检查，任务不会重发。');
@@ -72,7 +86,7 @@ export async function execute(job,save){
    }
    await pause(1800);
   }
-  throw Error('豆包尚未返回可下载图片。请查看客户端是否在询问需求或仍在生成，再点“检查上次任务”；不会重复发送。');
+  throw Error(job.kind==='ui-plan'?'豆包尚未返回通过校验的完整页面方案。请查看本次对话后检查任务；不会重复发送原始需求。':'豆包尚未返回可下载图片。请查看客户端是否在询问需求或仍在生成，再点“检查上次任务”；不会重复发送。');
  }catch(e){if(!job.submitAttempted&&job.sentPrompt)await clearPreparedDraft(page,job.sentPrompt).catch(()=>{});throw e;}finally{page.close();}
 }
 export async function downloadImage(image,fetcher=fetch){

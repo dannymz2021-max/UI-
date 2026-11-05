@@ -1,10 +1,11 @@
 import {moduleKey} from './ui-source-modules.js';
+import {renderUIPageV2} from './ui-page-render-v2.js';
 import {UI_COMPONENTS,validateUIPage} from './ui-page-schema.js';
 import {resolveSemanticValues} from './design-system.js';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const variableName=name=>'--mw-'+name.replace(/[^\w-]/g,'-');
 let libraryPromise;export const loadUILibrary=()=>libraryPromise??=fetch('/studio/figma/megwin-audit.json').then(r=>{if(!r.ok)throw Error('组件与变量档案暂不可用。');return r.json();});
-export function renderUIPage(raw,{audit,referenceDataUrl=null,importedSystem=null,modules=new Map()}={}){const plan=validateUIPage(raw);if(!plan.root)throw Error('需要先补充需求中的关键问题。');const file=audit?.files?.find(f=>f.id==='main');if(!file?.variables?.length)throw Error('缺少真实 Figma 变量，已停止生成。');
+export function renderUIPage(raw,{audit,referenceDataUrl=null,importedSystem=null,modules=new Map()}={}){if(raw?.format==='megwin-ui-v2')return renderUIPageV2(raw,{audit,referenceDataUrl,importedSystem,modules});const plan=validateUIPage(raw);if(!plan.root)throw Error('需要先补充需求中的关键问题。');const file=audit?.files?.find(f=>f.id==='main');if(!file?.variables?.length)throw Error('缺少真实 Figma 变量，已停止生成。');
  const modeId=plan.mode==='light'?'11:1':'11:0',byId=new Map(file.variables.map(v=>[v.id,v])),tokens=[];
  function resolve(v,seen=new Set()){if(seen.has(v.id))throw Error('变量别名循环。');seen.add(v.id);let value=v.valuesByMode[modeId]??Object.values(v.valuesByMode)[0];if(value?.type==='VARIABLE_ALIAS')return resolve(byId.get(value.id),seen);if(v.resolvedType==='COLOR'){const n=['r','g','b'].map(k=>Math.round(value[k]*255));return `rgba(${n.join(',')},${value.a??1})`;}return typeof value==='number'?(v.name.startsWith('opacity/')?String(value/100):value+'px'):String(value).replace(/[;{}<>]/g,'');}
  for(const v of file.variables)tokens.push({id:v.id,name:v.name,value:resolve(v),css:variableName(v.name)});

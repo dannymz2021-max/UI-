@@ -7,6 +7,7 @@ import {health,execute} from './driver.mjs';
 import {relayPage} from './relay-page.mjs';
 import {createBrowserJobs,extensionId,extensionOrigin} from './browser-jobs.mjs';
 import {inputMedia} from './media.mjs';
+import {validateUIPage} from '../public/studio/ui-page-schema.js';
 export const SITE_ORIGIN='https://ui-studio-danny-rebuilt.voidgdszyy.chatgpt.site';
 const origins=new Set([SITE_ORIGIN,'http://127.0.0.1:5173','http://127.0.0.1:9231',extensionOrigin]);
 const idPattern=/^[a-zA-Z0-9_-]{20,80}$/;
@@ -16,14 +17,15 @@ export function validateJob(body){
  if(typeof body.prompt!=='string'||!body.prompt.trim()||body.prompt.length>12000)throw error('INVALID_PROMPT','请填写12000字以内的需求。');
  if(body.kind!==undefined&&!['image','ui-plan'].includes(body.kind))throw error('INVALID_JOB','不支持的创作类型。');
  let media;try{media=inputMedia(body);}catch(e){throw error('INVALID_REFERENCE',e.message);}
- const context=body.kind==='ui-plan'?{mode:['dark','light'].includes(body.context?.mode)?body.context.mode:'auto',width:[390,768,1440,1600].includes(body.context?.width)?body.context.width:'auto',previousPlan:body.context?.previousPlan&&JSON.stringify(body.context.previousPlan).length<35000?body.context.previousPlan:null}:null;
+ let previousPlan=null;if(body.kind==='ui-plan'&&body.context?.previousPlan){try{if(JSON.stringify(body.context.previousPlan).length>220000)throw Error('上一版页面过大，请精简数据后修改。');validateUIPage(body.context.previousPlan);previousPlan=body.context.previousPlan;}catch(e){throw error('INVALID_JOB','上一版页面方案无效：'+e.message);}}
+ const context=body.kind==='ui-plan'?{mode:['dark','light'].includes(body.context?.mode)?body.context.mode:'auto',width:[390,768,1440,1600].includes(body.context?.width)?body.context.width:'auto',previousPlan}:null;
  return {id:body.requestId,prompt:body.prompt,kind:body.kind||'image',media,context,previousRequirements:body.previousRequirements?JSON.stringify(body.previousRequirements).slice(0,8000):null};
 }
 export async function createBridge({port=9231,root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../.sites-runtime/desktop-bridge'),driver={health,execute}}={}){
  await fs.mkdir(root,{recursive:true});const browserJobs=await createBrowserJobs(path.join(root,'inspiration'));const jobs=new Map(),tokens=new Map(),active=new Set();
  for(const name of await fs.readdir(root)){if(!/^[\w-]+\.json$/.test(name))continue;try{const j=JSON.parse(await fs.readFile(path.join(root,name),'utf8'));if(!idPattern.test(j.id))continue;if(j.status==='running')j.status=j.submitAttempted?'unknown':'failed';jobs.set(j.id,j);}catch{}}
  const save=async j=>{await fs.writeFile(path.join(root,j.id+'.tmp'),JSON.stringify(j));await fs.rename(path.join(root,j.id+'.tmp'),path.join(root,j.id+'.json'));};
- const view=j=>({id:j.id,kind:j.kind||'image',status:j.status,transport:'desktop',createdAt:j.createdAt,prompt:j.prompt,model:j.kind==='ui-plan'?'豆包桌面 · 快速':'豆包桌面 · Seedream 4.5',plan:j.plan,references:(j.files||[]).map(({name,role,sha256,sourceURL})=>({name,role,sha256,sourceURL})),imageUrl:j.status==='succeeded'&&j.kind!=='ui-plan'?'/jobs/'+j.id+'/image':null,validation:j.validation,error:j.error,usage:{calls:[],estimatedImageCny:0,source:'desktop',note:'未调用付费API，免费额度以豆包客户端为准'}});
+ const view=j=>({id:j.id,kind:j.kind||'image',status:j.status,correctionCount:(j.corrections||[]).length,transport:'desktop',createdAt:j.createdAt,prompt:j.prompt,model:j.kind==='ui-plan'?'豆包桌面 · 快速':'豆包桌面 · Seedream 4.5',plan:j.plan,references:(j.files||[]).map(({name,role,sha256,sourceURL})=>({name,role,sha256,sourceURL})),imageUrl:j.status==='succeeded'&&j.kind!=='ui-plan'?'/jobs/'+j.id+'/image':null,validation:j.validation,error:j.error,usage:{calls:[],estimatedImageCny:0,source:'desktop',note:'未调用付费API，免费额度以豆包客户端为准'}});
  const run=j=>{if(active.size)return;active.add(j.id);void(async()=>{try{j.error=null;const result=await driver.execute(j,save);if(j.kind==='ui-plan')j.plan=result.plan;else await fs.writeFile(path.join(root,j.id+'.png'),result);j.status='succeeded';await save(j);}catch(e){j.status=j.submitAttempted?'unknown':'failed';j.error={code:j.submitAttempted?'DESKTOP_UNKNOWN':'DESKTOP_NOT_SENT',message:e.message.split('\n')[0].replace(/^Error:\s*/,'')};await save(j);}finally{active.delete(j.id);}})();};
  const server=http.createServer(async(req,res)=>{
   const send=(status,value)=>{res.writeHead(status,{'Content-Type':'application/json; charset=utf-8'});res.end(JSON.stringify(value));};
