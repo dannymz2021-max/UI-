@@ -1,0 +1,1 @@
+const status=document.getElementById('status');chrome.storage.local.get('connectionStatus').then(v=>status.textContent=v.connectionStatus||'请先启动本机 UI 工作室连接器');document.getElementById('connect').onclick=()=>{status.textContent='正在连接…';chrome.runtime.sendMessage({action:'connect'}).then(v=>status.textContent=v?.connectionStatus||'请确认本机连接器已启动');};

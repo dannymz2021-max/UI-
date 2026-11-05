@@ -1,0 +1,1 @@
+export function referenceSource(value){try{const u=new URL(value);return u.protocol==='https:'&&['huaban.com','www.huaban.com'].includes(u.hostname)&&/^\/pins\/\d+\/?$/.test(u.pathname)&&!u.username&&!u.password&&!u.port?u.origin+u.pathname:null;}catch{return null;}}

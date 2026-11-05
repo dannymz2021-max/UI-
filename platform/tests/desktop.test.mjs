@@ -30,8 +30,8 @@ test('发送后连接中断进入未知状态，查询和重复提交均不重�
   assert.equal((await(await b.call('/jobs/'+body.requestId)).json()).job.status,'unknown');await b.call('/jobs',body);assert.equal(calls,1);const disk=JSON.parse(await fs.readFile(path.join(b.root,body.requestId+'.json'),'utf8'));assert.equal(disk.submitAttempted,true);
  }finally{await b.close();}
 });
-test('原始需求完整保留；不支持的参考图和改图在发送前拒绝',()=>{
- const prompt='不需要皇冠；准确文字：Bonjour；蓝色金属，16:9';assert.ok(composePrompt(prompt).includes(prompt));assert.throws(()=>validateJob({requestId:crypto.randomUUID(),prompt,references:[{dataUrl:'x'}]}),e=>e.code==='TEXT_ONLY');assert.throws(()=>validateJob({requestId:crypto.randomUUID(),prompt,baseImage:'x'}),e=>e.code==='TEXT_ONLY');
+test('原始需求完整保留；无效参考图在发送前拒绝',()=>{
+ const prompt='不需要皇冠；准确文字：Bonjour；蓝色金属，16:9';assert.ok(composePrompt(prompt).includes(prompt));assert.throws(()=>validateJob({requestId:crypto.randomUUID(),prompt,references:[{dataUrl:'x'}]}),e=>e.code==='INVALID_REFERENCE');assert.throws(()=>validateJob({requestId:crypto.randomUUID(),prompt,baseImage:'x'}),e=>e.code==='INVALID_REFERENCE');
 });
 test('桌面富文本的段落换行不改变需求校验，准确文字中的空格仍要保留',()=>{assert.equal(canonicalText('一张图\n\n准确文字：A B'),canonicalText('一张图\n准确文字：A B'));assert.notEqual(canonicalText('准确文字：A B'),canonicalText('准确文字：AB'));});
 test('原图下载只接受已观察的豆包媒体来源，不访问本机地址或重写缩略图URL',async()=>{

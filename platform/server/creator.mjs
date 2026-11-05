@@ -90,6 +90,8 @@ function jobView(r){return {id:r.id,status:r.status,imageUrl:r.result_key?`/api/
 export async function handleCreator(request,env,fetcher=fetch){
  try{
  const u=new URL(request.url),owner=await authorize(request,env),provider=providerConfig(env),healthKey=healthOwner(owner,provider.id);
+ if(request.method==='POST'&&u.pathname==='/api/studio/ui-plan'&&env.PAID_UI_API_ENABLED!=='true')fail('PAID_API_DISABLED','UI 需求理解已改用豆包桌面免费模式，付费 UI API 已关闭。',403);
+ if(request.method==='POST'&&['/api/creator/interpret','/api/creator/generate'].includes(u.pathname)&&env.CREATOR_PAID_API_ENABLED!=='true')fail('PAID_API_DISABLED','本站生图仅使用豆包桌面免费模式，付费图像 API 已关闭。',403);
  if(['/api/studio/status','/api/creator/status'].includes(u.pathname)){const generalHealth=env.DB?await env.DB.prepare('SELECT code,checked_at FROM creator_health WHERE owner=?').bind(healthKey).first():null,imageHealth=env.DB?await env.DB.prepare('SELECT code,checked_at FROM creator_health WHERE owner=?').bind(healthKey+':image').first():null;const health=imageHealth?.code?imageHealth:generalHealth;return json({ok:true,provider:provider.id,providerLabel:provider.label,generationReady:!!provider.key,editReady:!!provider.key,uiReady:false,uiComposeReady:!!provider.key&&!!env.DB,qualityControl:provider.id==='openai',storageReady:!!env.DB&&!!env.BUCKET,model:provider.previewModel||provider.imageModel,previewModel:provider.previewModel||null,finalModel:provider.imageModel,dailyLimit:Number(env.AI_DAILY_LIMIT)||10,lastError:health?.code||null,lastCheckedAt:health?.checked_at||null});}
  if(u.pathname==='/api/studio/ui-plan')return await generateUIPlan(request,env,owner,fetcher);
  if(!env.DB||!env.BUCKET)fail('STORAGE_NOT_READY','创作任务存储尚未就绪，请稍后重试。',503);

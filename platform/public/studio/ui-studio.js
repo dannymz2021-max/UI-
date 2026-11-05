@@ -1,3 +1,4 @@
+import {mountDemandUI} from './ui-demand.js';
 import { getDesignSystem, exportTokenManifest } from './design-system.js';
 import { defaultPageConfig, createPageModel, renderSVG, renderHTML, modelToPng, loadProjectFonts } from './ui-renderer.js';
 import { FIGMA_PAGE_META, FIGMA_PAGE_DEFAULTS, loadFigmaPage, renderFigmaHTML } from './figma-page.js';
@@ -394,24 +395,24 @@ function mountFigmaUIStudio(container, options = {}, sourceId = 'main') {
 /** Source pages and free templates retain independent drafts while switching. */
 export function mountUIStudio(container, options = {}) {
   container.classList.add('ui-root', 'ui-studio-mode-root');
-  const labels={compose:'需求生成',main:'主站原稿',activity:'活动原稿',free:'自由模板'};
+  const labels={design:'需求生成',compose:'原稿区块',main:'主站原稿',activity:'活动原稿',free:'自由模板'};
   const modes=Object.keys(labels);
   const tabs=modes.map(id=>`<button type="button" id="ui-tab-${id}" data-ui-mode="${id}" role="tab" aria-controls="ui-panel-${id}" aria-selected="false" tabindex="-1">${labels[id]}</button>`).join('');
   const panels=modes.map(id=>`<section id="ui-panel-${id}" class="ui-studio-mode-host ui-${id}-host" role="tabpanel" aria-labelledby="ui-tab-${id}" hidden></section>`).join('');
   container.innerHTML = `<div class="ui-studio-mode-bar"><div class="ui-studio-mode-tabs" role="tablist" aria-label="UI 页面创作方式">${tabs}</div><span class="ui-studio-mode-help"></span></div>${panels}`;
-  const instances = new Map(), q = selector => container.querySelector(selector); let mode = 'compose', destroyed = false;
+  const instances = new Map(), q = selector => container.querySelector(selector); let mode = 'design', destroyed = false;
   function activate(next) {
-    if (destroyed) return; mode = modes.includes(next) ? next : 'compose';
+    if (destroyed) return; mode = modes.includes(next) ? next : 'design';
     for (const id of modes) q(`.ui-${id}-host`).hidden = mode !== id;
     for (const button of container.querySelectorAll('[data-ui-mode]')) { const selected = button.dataset.uiMode === mode; button.setAttribute('aria-selected', String(selected)); button.tabIndex = selected ? 0 : -1; }
-    q('.ui-studio-mode-help').textContent = {compose:'按需求选用 MEGWIN 原稿区块',main:'主站原稿 · 体育首页',activity:'活动原稿 · 新客奖励',free:'独立通用布局 · 自由创作'}[mode];
-    if (!instances.has(mode)) instances.set(mode, mode === 'compose' ? mountUIComposer(q('.ui-compose-host'), options) : mode === 'free' ? mountFreeUIStudio(q('.ui-free-host'), options) : mountFigmaUIStudio(q(`.ui-${mode}-host`), options, mode));
+    q('.ui-studio-mode-help').textContent = {design:'需求与参考图 → 真实组件和变量 → UI 页面',compose:'按需求选用 MEGWIN 原稿区块',main:'主站原稿 · 体育首页',activity:'活动原稿 · 新客奖励',free:'独立通用布局 · 自由创作'}[mode];
+    if (!instances.has(mode)) instances.set(mode, mode === 'design' ? mountDemandUI(q('.ui-design-host'), options) : mode === 'compose' ? mountUIComposer(q('.ui-compose-host'), options) : mode === 'free' ? mountFreeUIStudio(q('.ui-free-host'), options) : mountFigmaUIStudio(q(`.ui-${mode}-host`), options, mode));
     else instances.get(mode).refresh?.();
   }
   for (const button of container.querySelectorAll('[data-ui-mode]')) {
     button.onclick = () => activate(button.dataset.uiMode);
     button.onkeydown = event => { if (!['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(event.key)) return; event.preventDefault(); const i = modes.indexOf(mode), next = event.key === 'Home' ? modes[0] : event.key === 'End' ? modes.at(-1) : modes[(i + (event.key === 'ArrowRight' ? 1 : modes.length-1)) % modes.length]; activate(next); q(`[data-ui-mode="${next}"]`).focus(); };
   }
-  activate('compose');
-  return { selectWorkspace: activate, refresh() { instances.get(mode)?.refresh?.(); }, generate(...args) { return instances.get(mode)?.generate?.(...args); }, getConfig: () => ({ workspaceMode: mode, ...instances.get(mode)?.getConfig?.() }), destroy() { destroyed = true; for (const instance of instances.values()) instance.destroy(); instances.clear(); container.replaceChildren(); } };
+  activate('design');
+  return { selectWorkspace: activate, async addReference(file){activate('design');await instances.get('design').addReference(file);}, refresh() { instances.get(mode)?.refresh?.(); }, generate(...args) { return instances.get(mode)?.generate?.(...args); }, getConfig: () => ({ workspaceMode: mode, ...instances.get(mode)?.getConfig?.() }), destroy() { destroyed = true; for (const instance of instances.values()) instance.destroy(); instances.clear(); container.replaceChildren(); } };
 }

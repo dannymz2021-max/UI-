@@ -1,0 +1,1 @@
+export function ownsMessages(texts,prompt,fileCount=0){const norm=value=>String(value||'').replace(/\s/g,''),expected=norm(prompt);if(!expected||!Array.isArray(texts)||texts.length>fileCount+1)return false;const matches=texts.filter(text=>norm(text).includes(expected));return matches.length===1&&texts.every(text=>!norm(text)||norm(text).includes(expected));}

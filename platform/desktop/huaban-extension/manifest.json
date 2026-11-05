@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "UI工作室 · 花瓣参考连接",
+  "version": "1.0.0",
+  "description": "使用已登录的花瓣页面搜索参考图，只与本机 UI 工作室通信；不读取 Cookie。",
+  "permissions": [
+    "alarms",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://huaban.com/*",
+    "https://*.huaban.com/*",
+    "https://*.huabanimg.com/*",
+    "http://127.0.0.1:9231/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://huaban.com/*",
+        "https://www.huaban.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_title": "UI工作室花瓣连接",
+    "default_popup": "popup.html"
+  },
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAs2Wjuy2vG9iA43XhpFWcexwHL9BW/MDVFmmseWQ/Dqcp9aUuvTKwOAeezALHroxdRiAtTsIjrXQrYPTbk35Eyech0mdHRT31JBVGO1NRpuka3ZglIkYEBEaLywAidxZOdYW3sk/SheSWcjhFrbLKxsMhbVpzbR/tyKLzw+al2jNZnLnZQaHSfFTtxwYn4su9CjlNdA2tp42Di9QQSCdIqct7Nb54nDkC10y8DEZzTmNJACRujDUdNn91eXEtEqUEOuDMtc/77istgxmRqRPWraWYdDnFHSHm45YVW/3Om3rQwdw/DoxUEnfqXytz1cJ6Ar5Iw7AeNV0BMIIMNI9E6QIDAQAB",
+  "externally_connectable": {
+    "matches": [
+      "https://ui-studio-danny-rebuilt.voidgdszyy.chatgpt.site/*",
+      "http://127.0.0.1:5173/*"
+    ]
+  }
+}

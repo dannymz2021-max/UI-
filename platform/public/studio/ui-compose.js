@@ -32,8 +32,8 @@ export function mountUIComposer(root,{requestCompose,getServiceStatus}={}){
   const feedback=message=>{status.textContent=message;};
   const state=()=>{
     const ready=!!getServiceStatus?.().uiComposeReady;
-    q('[data-ai]').disabled=!ready||busy;
-    q('[data-engine]').textContent=ready?'本地生成按原稿区块匹配。AI 可解读自然语言和参考图，会将本次输入发给 OpenAI。':'当前可按文字和 PRD 本地生成。AI 服务未就绪，参考图可用于人工对照。';
+    q('[data-ai]').disabled=true;q('[data-ai]').hidden=true;
+    q('[data-engine]').textContent='原稿区块在本地匹配，不调用付费 API。需要理解参考图或新布局，请使用“需求生成”。';
     q('[data-generate]').disabled=busy;
   };
   function fit(){
